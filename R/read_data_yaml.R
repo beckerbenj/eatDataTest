@@ -18,7 +18,16 @@ read_data_yaml <- function(.path = getwd(), name) {
 
   file_path <- file.path(.path, "data", paste0(name, ".yaml"))
 
-  yaml::yaml.load_file(file_path)
+  yaml_input <- yaml::yaml.load_file(file_path)
+
+  # normalize path
+  # TODO: Does this always work/make sense?
+  old_wd <- getwd()
+  on.exit(setwd(old_wd))
+  setwd(.path)
+  yaml_input$release <- tools::file_path_as_absolute(yaml_input$release)
+  yaml_input$oldrel <- tools::file_path_as_absolute(yaml_input$oldrel)
+  yaml_input
 }
 
 get_release_path <- function(.path = getwd(), name) {
