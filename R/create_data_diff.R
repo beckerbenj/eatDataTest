@@ -17,9 +17,10 @@ create_data_diff <- function(.path = getwd(), name, ID_var) {
 
   out_path <- file.path(.path, "diff", paste0(name, "_diff.xlsx"))
 
-  data_yaml <- read_data_yaml(.path = .path, name = name)
-  release_data <- eatGADS::import_spss(data_yaml$release)
-  oldrel_data <- eatGADS::import_spss(data_yaml$oldrel)
+  #stop("is_checking:", is_checking(), " and path: ", .path)
+
+  release_data <- import_data(.path = .path, name = name, data_version = "release")
+  oldrel_data <- import_data(.path = .path, name = name, data_version = "oldrel")
 
   out_compare <- eatFDZ::compare_data(data1 = release_data,
                        data2 = oldrel_data,

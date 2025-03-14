@@ -1,6 +1,7 @@
 
 
 test_that("create data diff", {
+  #stop("is_checking:", is_checking(), " and getwd: ", getwd())
   suppressMessages(create_data_diff(.path = test_path("helper_example_repo"),
                                     name = "helper_data1", ID_var = "ID"))
 

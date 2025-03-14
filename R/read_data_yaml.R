@@ -16,15 +16,17 @@
 read_data_yaml <- function(.path = getwd(), name) {
   # input validation
 
-  file_path <- file.path(.path, "data", paste0(name, ".yaml"))
+  adapted_path <- adapt_path_for_yaml_reading(.path)
+  file_path <- file.path(adapted_path, "data", paste0(name, ".yaml"))
 
   yaml_input <- yaml::yaml.load_file(file_path)
 
+  #browser()
   # normalize path
   # TODO: Does this always work/make sense?
   old_wd <- getwd()
   on.exit(setwd(old_wd))
-  setwd(.path)
+  setwd(adapted_path)
   yaml_input$release <- tools::file_path_as_absolute(yaml_input$release)
   yaml_input$oldrel <- tools::file_path_as_absolute(yaml_input$oldrel)
   yaml_input

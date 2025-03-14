@@ -1,10 +1,7 @@
 
-#browser()
-
-#dat_path <- get_release_path(.path = getwd(), name = "helper_data1")
-dat_path <- get_release_path(.path = test_path("helper_example_repo"), name = "helper_data1")
-dat <- eatGADS::import_spss(dat_path)
-
+#setwd("C:/Repositories/Packages/eatDataTest/tests/testthat/helper_example_repo")
+#setwd("C:/Repositories/Packages/eatDataTest")
+dat <- import_data(name = "helper_data1", data_version = "release")
 
 test_that("Data contains right number of rows", {
   expect_equal(nrow(dat$dat), 10)
