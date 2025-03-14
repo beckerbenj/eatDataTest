@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(eatDaT)
+library(eatDataTest)
 
-test_check("eatDaT")
+test_check("eatDataTest")
