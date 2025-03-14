@@ -1,19 +1,19 @@
-# eatDaT
+# eatDataTest
 
 <!-- badges: start -->
-[![R-CMD-check](https://github.com/beckerbenj/eatDaT/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/beckerbenj/eatDaT/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/beckerbenj/eatDaT/graph/badge.svg)](https://app.codecov.io/gh/beckerbenj/eatDaT)
+[![R-CMD-check](https://github.com/beckerbenj/eatDataTest/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/beckerbenj/eatDataTest/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/beckerbenj/eatDataTest/graph/badge.svg)](https://app.codecov.io/gh/beckerbenj/eatDataTest)
 <!-- badges: end -->
 
 ## Overview
 
-`eatDaT` (educational assessment tools: Data Tests) is a framework for testing an comparing different data set versions.
+`eatDataTest` (educational assessment tools: Data Tests) is a framework for testing an comparing different data set versions.
 
 ## Installation
 
 ```R
 # Install development version from GitHub via
-remotes::install_github("beckerbenj/eatDaT")
+remotes::install_github("beckerbenj/eatDataTest")
 ```
 
 ## Usage

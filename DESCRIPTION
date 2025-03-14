@@ -1,4 +1,4 @@
-Package: eatDaT
+Package: eatDataTest
 Title: educational assessment tools: Data Testing
 Version: 0.0.0.9000
 Authors@R: 
@@ -6,8 +6,8 @@ Authors@R:
 Description: Provides a framework for unit testing and diff creation of data sets. 
 Depends: R (>= 4.4.0)
 Imports: eatGADS, yaml, writexl, readxl, eatFDZ
-URL: https://github.com/beckerbenj/eatDaT,
-    https://beckerbenj.github.io/eatDaT/
+URL: https://github.com/beckerbenj/eatDataTest,
+    https://beckerbenj.github.io/eatDataTest/
 License: GPL (>= 2)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
