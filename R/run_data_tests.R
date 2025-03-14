@@ -21,9 +21,9 @@ run_data_tests <- function(.path = getwd(), name) {
 
   if(sum(test_out$failed == 1) == 0) {
     # create pass icon
-    icon_source <- system.file("extdata", "pass_icon.svg", package = "eatDaT")
+    icon_source <- system.file("extdata", "pass_icon.svg", package = "eatDataTest")
   } else {
-    icon_source <- system.file("extdata", "fail_icon.svg", package = "eatDaT")
+    icon_source <- system.file("extdata", "fail_icon.svg", package = "eatDataTest")
   }
   file.copy(from = icon_source, to = icon_result_path)
 
