@@ -10,8 +10,10 @@ tests_dir <- file.path(temp_dir, "tests")
 if(!file.exists(tests_dir)) {
   dir.create(tests_dir)
 }
-
-
+data_dir <- file.path(temp_dir, "data")
+if(!file.exists(data_dir)) {
+  dir.create(data_dir)
+}
 
 test_that("write changelog md", {
   create_changelog(.path = temp_dir, name = "data1")
@@ -27,11 +29,9 @@ test_that("write tests R", {
 
   out <- readLines(file.path(temp_dir, "tests", "tests-data1.R"))
 
-  expect_equal(out[1], 'dat <- import_data(name = \"data1\", data_version = \"release\")')
-  expect_equal(out[2], '')
-  expect_equal(out[3], 'test_that(\"test GADSdat structure\", {')
-  expect_equal(out[4], '  expect_is(dat, \"GADSdat\")')
-  expect_equal(out[5], '})')
+  expect_equal(out[5], 'dat <- import_data(name = \"data1\", data_version = \"release\")')
+  expect_equal(out[6], '')
+  expect_equal(out[7], 'test_that(\"dat has proper GADSdat structure\", {')
 })
 
 test_that("write initial test results", {
@@ -39,6 +39,22 @@ test_that("write initial test results", {
 
   expect_true(file.exists(file.path(temp_dir, "tests", "result-data1.svg")))
 })
+
+test_that("create readme snippet", {
+  out <- create_readme_snippet(name = "data1", version = "v1.0")
+
+  expect_equal(out,
+               "| data1              | v1.0    | ![s](tests/result-data1.svg) |")
+})
+
+if(clipr::clipr_available()) {
+  test_that("full add data workflow", {
+    out <- add_data(.path = temp_dir, name = "data1", release_path = "C:/temp/data1.sav", version = "v1.0")
+
+    expect_equal(out,
+                 "| data1              | v1.0    | ![s](tests/result-data1.svg) |")
+  })
+}
 
 # delete temporary directory
 unlink(changelog_dir, recursive = TRUE)

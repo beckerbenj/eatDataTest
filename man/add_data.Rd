@@ -24,14 +24,16 @@ add_data(
 \item{version}{Version number of the current data set. Defaults to \code{'v1.0'}.}
 }
 \value{
-Creates data set infrastructure. Returns \code{NULL}.
+Creates data set infrastructure. Returns a markdown snippet.
 }
 \description{
-Add the infrastructure for a new data set to the \code{eatDaT} repository. This includes
+Add the infrastructure for a new data set to the \code{eatDataTest} repository. This includes
 \itemize{
 \item a \code{.yaml} file
 \item a markdown changelog (\code{.md} file)
 \item a test file (\code{.R} file in \code{tests})
+\item an initial test result icon (\code{.svg} file in \code{tests})
+\item a snippet which can be inserted into the \code{Readme.md}.
 }
 }
 \examples{
