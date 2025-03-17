@@ -29,6 +29,7 @@ Creates data set infrastructure. Returns a markdown snippet.
 \description{
 Add the infrastructure for a new data set to the \code{eatDataTest} repository. This includes
 \itemize{
+\item creating an empty \code{GADSdat} object if \code{oldrel} is empty
 \item a \code{.yaml} file
 \item a markdown changelog (\code{.md} file)
 \item a test file (\code{.R} file in \code{tests})
