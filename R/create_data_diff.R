@@ -36,3 +36,47 @@ create_data_diff <- function(.path = getwd(), name, ID_var) {
   writexl::write_xlsx(out_compare, path = out_path)
   invisible(return())
 }
+
+
+## TODO: Refactor comparison functions in eatGADS (equalGADS, compareGADS, inspectData, inspectMetaData)
+# and eatFDZ (compare_data)
+# Probably everything should live in eatGADS? Clean and fast equalGADS, precies inspect and
+# extensive reporting in compare_data and compare_meta_data?
+
+compare_actual_data <- function(data1, data2, name_data1 = "data1", name_data2 = "data2", ID_var) {
+  ## input validation
+  # ----------------------------------------------------------
+  eatGADS:::check_GADSdat(data1)
+  eatGADS:::check_GADSdat(data2)
+
+  eatGADS:::check_characterArgument(ID_var, argName = "ID_var")
+  eatGADS:::check_characterArgument(name_data1, argName = "name_data1")
+  eatGADS:::check_characterArgument(name_data2, argName = "name_data2")
+
+  eatGADS:::check_vars_in_GADSdat(data1, vars = ID_var, argName = "ID_var", GADSdatName = "data1")
+  eatGADS:::check_vars_in_GADSdat(data2, vars = ID_var, argName = "ID_var", GADSdatName = "data2")
+
+  ## initiate comparison
+  # ----------------------------------------------------------
+  eatGADS_comparison <- eatGADS::equalGADS(data1, data2, id = ID_var)
+
+
+  ## compare data
+  # ----------------------------------------------------------
+  out_list_var <- lapply(eatGADS_comparison$data_differences, function(nam) {
+    out <- eatGADS::inspectDifferences(data1, other_GADSdat = data2, varName = nam, id = ID_var)
+    #browser()
+    names(dimnames(out$cross_table)) <- c(name_data1, name_data2)
+    out$cross_table
+  })
+
+  names(out_list_var) <- eatGADS_comparison$data_differences
+
+  #browser()
+
+  ## TODO:
+  # Overview as first list element. Just a list of variables that differ in their data (maybe with variable labels?)
+  # Then a variable number of additional sheets, each containing just the cross table
+  # => check eatFDZ compare_data() for code ideas
+
+}
