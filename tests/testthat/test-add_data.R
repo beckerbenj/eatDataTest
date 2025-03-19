@@ -36,7 +36,7 @@ test_that("write tests R", {
 
   out <- readLines(file.path(temp_dir, "tests", "test-data1.R"))
 
-  expect_equal(out[5], 'dat <- import_data(name = \"data1\", data_version = \"release\")')
+  expect_equal(out[5], 'dat <- eatDataTest::import_data(name = \"data1\", data_version = \"release\")')
   expect_equal(out[6], '')
   expect_equal(out[7], 'test_that(\"dat has proper GADSdat structure\", {')
 })

@@ -2,7 +2,7 @@
 # edit this file to modify and customize your tests
 
 # import data set
-dat <- import_data(name = "{{ name }}", data_version = "release")
+dat <- eatDataTest::import_data(name = "{{ name }}", data_version = "release")
 
 test_that("dat has proper GADSdat structure", {
   expect_s3_class(dat, "GADSdat")
