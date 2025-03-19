@@ -89,7 +89,7 @@ create_changelog <- function(.path = getwd(), name, version = "v1.0") {
 create_tests <- function(.path = getwd(), name) {
   # input validation
 
-  file_path <- file.path(.path, "tests", paste0("tests-", name, ".R"))
+  file_path <- file.path(.path, "tests", paste0("test-", name, ".R"))
 
   template_path <- system.file("templates", "test_eatGADS.R", package = "eatDataTest")
   template_string <- readLines(template_path, encoding = "UTF-8", warn = FALSE)

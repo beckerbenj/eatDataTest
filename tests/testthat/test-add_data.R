@@ -34,7 +34,7 @@ test_that("write changelog md", {
 test_that("write tests R", {
   create_tests(.path = temp_dir, name = "data1")
 
-  out <- readLines(file.path(temp_dir, "tests", "tests-data1.R"))
+  out <- readLines(file.path(temp_dir, "tests", "test-data1.R"))
 
   expect_equal(out[5], 'dat <- import_data(name = \"data1\", data_version = \"release\")')
   expect_equal(out[6], '')
