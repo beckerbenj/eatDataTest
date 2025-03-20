@@ -25,7 +25,7 @@ import_data <- function(.path = getwd(), name, data_version = c("release", "oldr
 
   if(identical(file_extension, "sav")) {
     gads <- eatGADS::import_spss(file_path)
-  } else if(identical(file_extension, "RDS")) {
+  } else if(file_extension %in% c("RDS", "Rds", "rds")) {
     gads <- readRDS(file_path)
   } else {
     stop("Unsupported file extension: ", file_extension)
