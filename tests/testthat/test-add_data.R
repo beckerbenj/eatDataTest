@@ -15,13 +15,6 @@ if(!file.exists(data_dir)) {
   dir.create(data_dir)
 }
 
-test_that("copy empty GADSdat into data", {
-  out <- create_empty_oldrel(.path = temp_dir, name = "data1")
-
-  expect_equal(out, file.path(temp_dir, "data", "empty_gads.RDS"))
-  expect_true(file.exists(out))
-})
-
 test_that("write changelog md", {
   create_changelog(.path = temp_dir, name = "data1")
 

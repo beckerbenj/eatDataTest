@@ -1,10 +1,3 @@
-
-# create empty data set for initial diff
-empty_gads <- eatGADS:::new_GADSdat(dat = data.frame(),
-                                    labels = eatGADS::pisa$labels[0, ])
-saveRDS(empty_gads, "inst/extdata/empty_gads.RDS")
-
-
 # test repo yamls
 create_data_yaml(.path = test_path("helper_example_repo"), name = "helper_data1", version = "v2.3",
                  release_path = "data_files/example_data.sav", oldrel_path = "data_files/example_data2.sav")
