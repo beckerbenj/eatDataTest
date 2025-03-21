@@ -18,6 +18,12 @@ test_that("compare actual data", {
 })
 
 
+test_that("input validation create_diff", {
+  expect_error(create_diff(.path = test_path("helper_example_repo"),
+                               name = "helper_data_no_oldrel", ID_var = "ID"),
+               "No oldrel path specified. No meaningful diff can be computed.")
+})
+
 test_that("create data and meta data diff", {
   suppressMessages(create_diff(.path = test_path("helper_example_repo"),
                                     name = "helper_data1", ID_var = "ID"))

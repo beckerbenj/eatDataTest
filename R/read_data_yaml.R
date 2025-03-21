@@ -28,7 +28,9 @@ read_data_yaml <- function(.path = getwd(), name) {
   on.exit(setwd(old_wd))
   setwd(adapted_path)
   yaml_input$release <- tools::file_path_as_absolute(yaml_input$release)
-  yaml_input$oldrel <- tools::file_path_as_absolute(yaml_input$oldrel)
+  if(!is.null(yaml_input$oldrel)) {
+    yaml_input$oldrel <- tools::file_path_as_absolute(yaml_input$oldrel)
+  }
   yaml_input
 }
 

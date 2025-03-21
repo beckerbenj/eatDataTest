@@ -15,6 +15,9 @@
 #'@export
 create_diff <- function(.path = getwd(), name, ID_var) {
   # input validation
+  if(is.null(get_oldrel_path(.path = .path, name = name))) {
+    stop("No oldrel path specified. No meaningful diff can be computed.")
+  }
 
   meta_path <- file.path(.path, "diff", paste0(name, "_meta_diff.xlsx"))
   data_path <- file.path(.path, "diff", paste0(name, "_data_diff.xlsx"))

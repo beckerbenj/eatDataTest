@@ -7,7 +7,7 @@
 #'@param .path Path to the `eatDaT` repository. Defaults to the current working directory.
 #'@param name Name of the data set. The file will be named accordingly.
 #'@param release_path Path to the data set.
-#'@param oldrel_path Optional: Path to the previous data version.
+#'@param oldrel_path Optional: Path to the previous data version. Defaults to `NULL`.
 #'@param version Version number of the current data set. Defaults to `'v1.0'`.
 #'
 #'@return Creates a .yaml. Returns `NULL`.
@@ -16,7 +16,7 @@
 #'## tbd
 #'
 #'@export
-create_data_yaml <- function(.path = getwd(), name, release_path, oldrel_path = "", version = "v1.0") {
+create_data_yaml <- function(.path = getwd(), name, release_path, oldrel_path = NULL, version = "v1.0") {
   # input validation
 
   file_path <- file.path(.path, "data", paste0(name, ".yaml"))

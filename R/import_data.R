@@ -21,6 +21,9 @@ import_data <- function(.path = getwd(), name, data_version = c("release", "oldr
   file_path <- read_data_yaml(.path = .path, name = name)[[data_version]]
   file_extension <- tools::file_ext(file_path)
 
+  if(is.null(file_path)) {
+    stop("No path specified for ", name, " in version ", data_version, ". Please check data/", name, ".yaml")
+  }
   #browser()
 
   if(identical(file_extension, "sav")) {

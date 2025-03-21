@@ -8,7 +8,7 @@ create_data_yaml(
   .path = getwd(),
   name,
   release_path,
-  oldrel_path = "",
+  oldrel_path = NULL,
   version = "v1.0"
 )
 }
@@ -19,7 +19,7 @@ create_data_yaml(
 
 \item{release_path}{Path to the data set.}
 
-\item{oldrel_path}{Optional: Path to the previous data version.}
+\item{oldrel_path}{Optional: Path to the previous data version. Defaults to \code{NULL}.}
 
 \item{version}{Version number of the current data set. Defaults to \code{'v1.0'}.}
 }
