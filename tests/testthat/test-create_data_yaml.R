@@ -14,6 +14,7 @@ test_that("write data yaml", {
   expect_equal(out$version, "v1.0")
   expect_equal(out$release, "C:/temp/data1.sav")
   expect_equal(out$oldrel, NULL)
+  expect_equal(out$depends, NULL)
 })
 
 # delete temporary directory

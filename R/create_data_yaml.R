@@ -16,15 +16,14 @@
 #'## tbd
 #'
 #'@export
-create_data_yaml <- function(.path = getwd(), name, release_path, oldrel_path = NULL, version = "v1.0") {
+create_data_yaml <- function(.path = getwd(), name, release_path, oldrel_path = NULL,
+                             version = "v1.0", depends = NULL) {
   # input validation
 
   file_path <- file.path(.path, "data", paste0(name, ".yaml"))
 
-  yaml_content <- list(version, release_path, oldrel_path)
-  names(yaml_content) <- c("version", "release", "oldrel")
-
-  # TODO: Clean solution for empty oldrel
+  yaml_content <- list(version, release_path, oldrel_path, depends)
+  names(yaml_content) <- c("version", "release", "oldrel", "depends")
 
   yaml::write_yaml(yaml_content, file = file_path)
   invisible(return())

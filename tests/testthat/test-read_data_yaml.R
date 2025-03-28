@@ -29,3 +29,23 @@ test_that("get version number", {
 
   expect_equal(out, "v2.3")
 })
+
+
+test_that("validate name", {
+  out_exists <- validate_name(.path = test_path("helper_example_repo"), name = "helper_data1")
+  out_not_exists <- validate_name(.path = test_path("helper_example_repo"), name = "helper_data4")
+
+  expect_equal(out_exists, TRUE)
+  expect_equal(out_not_exists, FALSE)
+})
+
+test_that("validate name", {
+  out_exists <- validate_depends(.path = test_path("helper_example_repo"),
+                              depends = c("helper_data1", "helper_data3"))
+  out_not_exists <- validate_depends(.path = test_path("helper_example_repo"),
+                                 depends = c("helper_data1", "helper_data4"))
+
+  expect_equal(out_exists, TRUE)
+  expect_equal(out_not_exists, FALSE)
+})
+

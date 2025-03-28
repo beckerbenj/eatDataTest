@@ -1,3 +1,4 @@
 version: v1.2
 release: data_files/example_data.RDS
 oldrel: data_files/example_data2.RDS
+depends: helper_data4

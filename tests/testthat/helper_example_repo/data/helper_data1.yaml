@@ -1,3 +1,4 @@
 version: v2.3
 release: data_files/example_data.sav
 oldrel: data_files/example_data2.sav
+depends: helper_data2, helper_data3
