@@ -12,6 +12,7 @@
 #'@param release_path Path to the data set.
 #'@param oldrel_path Optional: Path to the previous data version.
 #'@param version Version number of the current data set. Defaults to `'v1.0'`.
+#'@param depends What other data sets does this data set depend on? List of data set names separated by `", "`.
 #'
 #'@return Creates data set infrastructure. Returns a markdown snippet.
 #'
@@ -19,7 +20,8 @@
 #'## tbd
 #'
 #'@export
-add_data <- function(.path = getwd(), name, release_path, oldrel_path = NULL, version = "v1.0") {
+add_data <- function(.path = getwd(), name, release_path, oldrel_path = NULL,
+                     version = "v1.0", depends = NULL) {
   # input validation
 
   file_path <- file.path(.path, "data", paste0(name, ".yaml"))
@@ -27,7 +29,7 @@ add_data <- function(.path = getwd(), name, release_path, oldrel_path = NULL, ve
   # yaml
   cli::cli_par()
   create_data_yaml(.path = .path, name = name, release_path = release_path, oldrel_path = oldrel_path,
-                   version = version)
+                   version = version, depends = depends)
   cli::cli_alert_success("Created .yaml file in data folder.")
 
   # markdown changelog

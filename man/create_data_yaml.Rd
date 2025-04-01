@@ -23,6 +23,8 @@ create_data_yaml(
 \item{oldrel_path}{Optional: Path to the previous data version. Defaults to \code{NULL}.}
 
 \item{version}{Version number of the current data set. Defaults to \code{'v1.0'}.}
+
+\item{depends}{What other data sets does this data set depend on? List of data set names separated by \code{", "}.}
 }
 \value{
 Creates a .yaml. Returns \code{NULL}.

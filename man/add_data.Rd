@@ -9,7 +9,8 @@ add_data(
   name,
   release_path,
   oldrel_path = NULL,
-  version = "v1.0"
+  version = "v1.0",
+  depends = NULL
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ add_data(
 \item{oldrel_path}{Optional: Path to the previous data version.}
 
 \item{version}{Version number of the current data set. Defaults to \code{'v1.0'}.}
+
+\item{depends}{What other data sets does this data set depend on? List of data set names separated by \code{", "}.}
 }
 \value{
 Creates data set infrastructure. Returns a markdown snippet.

@@ -9,6 +9,7 @@
 #'@param release_path Path to the data set.
 #'@param oldrel_path Optional: Path to the previous data version. Defaults to `NULL`.
 #'@param version Version number of the current data set. Defaults to `'v1.0'`.
+#'@param depends What other data sets does this data set depend on? List of data set names separated by `", "`.
 #'
 #'@return Creates a .yaml. Returns `NULL`.
 #'
