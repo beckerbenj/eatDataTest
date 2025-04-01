@@ -140,12 +140,24 @@ inspectDifferences2 <- function(GADSdat, varName, other_GADSdat = GADSdat, other
   merged_df <- merge(GADSdat$dat[, c(id, varName)], other_GADSdat$dat[, c(id, other_varName)],
                      by = id, all = TRUE)
 
-  table(merged_df[, length(id) + 1], merged_df[, length(id) + 2], useNA = "if",
+  table(merged_df[, length(id) + 1], merged_df[, length(id) + 2], useNA = "ifany",
         dnn = nam_dnn)
 
   #list(cross_table = table(GADSdat$dat[, varName], other_GADSdat$dat[, other_varName], useNA = "if",
   #                         dnn = nam_dnn),
   #     unequal_IDs = unequal_case_dat2[, id]
   #)
+}
+
+cross_table_as_data_frame <- function(v1, v2, useNA) {
+  # input validation
+
+  tab <- table(v1, v2, useNA = useNA)
+  m1 <- matrix(tab, ncol = ncol(tab))
+
+  df_no_colnames <- data.frame(c1 = dimnames(tab)[[1]], m1)
+  rbind(c(NA, dimnames(tab)[[2]]), df_no_colnames)
+
+  # TODO: add some naming of v1 and v2?
 }
 

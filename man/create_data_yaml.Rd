@@ -9,7 +9,8 @@ create_data_yaml(
   name,
   release_path,
   oldrel_path = NULL,
-  version = "v1.0"
+  version = "v1.0",
+  depends = NULL
 )
 }
 \arguments{
