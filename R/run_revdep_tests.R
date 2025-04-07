@@ -38,7 +38,7 @@ run_revdep_tests <- function(.path = getwd(), name, overwrite_icons = FALSE) {
 
     if(name %in% depends_list) {
       message("\nRunning tests for ", single_data_name, "\n")
-      run_data_tests(.path = .path, name = single_data_name, create_icon = overwrite_icons)
+      run_data_tests(.path = .path, name = single_data_name, overwrite_icon = overwrite_icons)
       test_counter <- test_counter + 1
     }
   }
