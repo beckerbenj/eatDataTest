@@ -4,18 +4,20 @@
 \alias{run_data_tests}
 \title{Run Data Tests.}
 \usage{
-run_data_tests(.path = getwd(), name)
+run_data_tests(.path = getwd(), name, overwrite_icon = TRUE)
 }
 \arguments{
-\item{.path}{Path to the \code{eatDaT} repository. Defaults to the current working directory.}
+\item{.path}{Path to the \code{eatDataTest} repository. Defaults to the current working directory.}
 
-\item{name}{Name of the data set. The file will be named accordingly.}
+\item{name}{Name of the data set.}
+
+\item{overwrite_icon}{Should the result icon in the \code{tests} folder be overwritten?}
 }
 \value{
 Creates a test result icon. Returns \code{NULL}.
 }
 \description{
-Run all tests for a data set ...
+Run all tests for a data set.
 }
 \examples{
 ## tbd
