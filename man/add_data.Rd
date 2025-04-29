@@ -14,7 +14,7 @@ add_data(
 )
 }
 \arguments{
-\item{.path}{Path to the \code{eatDaT} repository. Defaults to the current working directory.}
+\item{.path}{Path to the \code{eatDataTest} repository. Defaults to the current working directory.}
 
 \item{name}{Name of the data set. All files will be named accordingly.}
 

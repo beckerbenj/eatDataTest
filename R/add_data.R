@@ -7,7 +7,7 @@
 #' * an initial test result icon (`.svg` file in `tests`)
 #' * a snippet which can be inserted into the `Readme.md`.
 #'
-#'@param .path Path to the `eatDaT` repository. Defaults to the current working directory.
+#'@param .path Path to the `eatDataTest` repository. Defaults to the current working directory.
 #'@param name Name of the data set. All files will be named accordingly.
 #'@param release_path Path to the data set.
 #'@param oldrel_path Optional: Path to the previous data version.
