@@ -11,7 +11,7 @@ create_diff(.path = getwd(), name, ID_var)
 
 \item{name}{Name of the data set. The file will be named accordingly.}
 
-\item{ID_var}{Name of the id variable in bot data set.}
+\item{ID_var}{Name of the id variable in both data set.}
 }
 \value{
 Creates a .xlsx. Returns \code{NULL}.

@@ -5,7 +5,7 @@
 #'
 #'@param .path Path to the `eatDaT` repository. Defaults to the current working directory.
 #'@param name Name of the data set. The file will be named accordingly.
-#'@param ID_var Name of the id variable in bot data set.
+#'@param ID_var Name of the id variable in both data set.
 #'
 #'@return Creates a .xlsx. Returns `NULL`.
 #'
@@ -72,11 +72,12 @@ compare_actual_data <- function(data1, data2, name_data1 = "data1", name_data2 =
   ## specific cross tables
   # ----------------------------------------------------------
   out_list_var <- lapply(eatGADS_comparison$data_differences, function(nam) {
-    out <- inspectDifferences2(data1, other_GADSdat = data2, varName = nam, id = ID_var)
+    inspectDifferences2(data1, other_GADSdat = data2, varName = nam, id = ID_var)
+    #out <- inspectDifferences2(data1, other_GADSdat = data2, varName = nam, id = ID_var)
     #browser()
-    names(dimnames(out)) <- c(name_data1, name_data2)
-    out_df <- as.data.frame.matrix(out)
-    data.frame(rownames(out_df), out_df)
+    #names(dimnames(out)) <- c(name_data1, name_data2)
+    #out_df <- as.data.frame.matrix(out)
+    #data.frame(rownames(out_df), out_df)
   })
 
   out <- vector(mode = "list", length = length(out_list_var) + 1)
@@ -125,39 +126,34 @@ inspectDifferences2 <- function(GADSdat, varName, other_GADSdat = GADSdat, other
     return("all.equal")
   }
 
-  #unequal_rows <- c(which(other_GADSdat$dat[, other_varName] != GADSdat$dat[, varName]),
-  #                  which(is.na(other_GADSdat$dat[, other_varName]) & !is.na(GADSdat$dat[, varName])),
-  #                  which(!is.na(other_GADSdat$dat[, other_varName]) & is.na(GADSdat$dat[, varName])))
-  #unequal_case_dat2 <- other_GADSdat$dat[unequal_rows, ]
-  #unequal_case_dat1 <- GADSdat$dat[unequal_rows, ]
-
   # naming for cross_table
   nam_dnn <- c(varName, other_varName)
   if(identical(varName, other_varName)) {
-    nam_dnn <- c("GADSdat", "other_GADSdat")
+    nam_dnn <- c("release", "oldrel") # could/should this be more generic?
   }
 
   merged_df <- merge(GADSdat$dat[, c(id, varName)], other_GADSdat$dat[, c(id, other_varName)],
                      by = id, all = TRUE)
 
-  table(merged_df[, length(id) + 1], merged_df[, length(id) + 2], useNA = "ifany",
-        dnn = nam_dnn)
+  cross_table_as_data_frame(merged_df[, length(id) + 1], merged_df[, length(id) + 2], useNA = "ifany",
+                            name1 = nam_dnn[1], name2 = nam_dnn[2])
 
-  #list(cross_table = table(GADSdat$dat[, varName], other_GADSdat$dat[, other_varName], useNA = "if",
-  #                         dnn = nam_dnn),
-  #     unequal_IDs = unequal_case_dat2[, id]
-  #)
 }
 
-cross_table_as_data_frame <- function(v1, v2, useNA) {
+cross_table_as_data_frame <- function(v1, v2, name1, name2, useNA = "ifany") {
   # input validation
 
   tab <- table(v1, v2, useNA = useNA)
   m1 <- matrix(tab, ncol = ncol(tab))
 
-  df_no_colnames <- data.frame(c1 = dimnames(tab)[[1]], m1)
-  rbind(c(NA, dimnames(tab)[[2]]), df_no_colnames)
+  df_no_colnames <- data.frame(c1 = rep(NA, length(dimnames(tab)[[1]])), # name of variable/data.frame
+                               c2 = dimnames(tab)[[1]], # values
+                               m1) # actual table
+  out <- rbind(c(NA, name2, rep(NA, length(dimnames(tab)[[2]]))), # name of variable/data.frame
+          c(name1, NA, dimnames(tab)[[2]]), # values
+          df_no_colnames)
+  colnames(out) <- NULL
+  out
 
-  # TODO: add some naming of v1 and v2?
 }
 
