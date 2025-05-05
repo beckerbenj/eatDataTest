@@ -8,7 +8,7 @@
 #'@param data1 First `GADSdat` object.
 #'@param data2 Second `GADSdat` object.
 #'@param suffix Suffix that should be removed from all
-#'@param ID_var Should paths in `release` and `oldrel` be converted to absolute paths?
+#'@param ID_var Name of the id variable in both data sets (artifact of old function architecture).
 #'
 #'@return Returns a named list via `eatFDZ::compare_data()`:
 #'* `compared_variables`: Which variables have been compared?

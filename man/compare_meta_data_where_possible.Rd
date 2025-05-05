@@ -13,7 +13,7 @@ compare_meta_data_where_possible(data1, data2, suffix = NULL, ID_var)
 
 \item{suffix}{Suffix that should be removed from all}
 
-\item{ID_var}{Should paths in \code{release} and \code{oldrel} be converted to absolute paths?}
+\item{ID_var}{Name of the id variable in both data sets (artifact of old function architecture).}
 }
 \value{
 Returns a named list via \code{eatFDZ::compare_data()}:
