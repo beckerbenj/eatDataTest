@@ -7,7 +7,7 @@
 import_data(.path = getwd(), name, data_version = c("release", "oldrel"))
 }
 \arguments{
-\item{.path}{Path to the \code{eatDaT} repository. Defaults to the current working directory.}
+\item{.path}{Path to the \code{eatDataTest} repository. Defaults to the current working directory.}
 
 \item{name}{Name of the data set. The file will be named accordingly.}
 

@@ -3,7 +3,7 @@
 #' Imports a data set based on its yaml file. Currently, `import_data()` supports
 #' `.RDS` and `.sav` files.
 #'
-#'@param .path Path to the `eatDaT` repository. Defaults to the current working directory.
+#'@param .path Path to the `eatDataTest` repository. Defaults to the current working directory.
 #'@param name Name of the data set. The file will be named accordingly.
 #'@param data_version Available options are `'release'` and `'oldrel'`. Defaults to `'release'`.
 #'

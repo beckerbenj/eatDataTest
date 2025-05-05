@@ -2,22 +2,41 @@
 % Please edit documentation in R/read_data_yaml.R
 \name{read_data_yaml}
 \alias{read_data_yaml}
+\alias{get_release_path}
+\alias{get_oldrel_path}
+\alias{get_version}
+\alias{get_depends}
 \title{Read Data Yaml.}
 \usage{
-read_data_yaml(.path = getwd(), name)
+read_data_yaml(.path = getwd(), name, absolute_paths = TRUE)
+
+get_release_path(.path = getwd(), name)
+
+get_oldrel_path(.path = getwd(), name)
+
+get_version(.path = getwd(), name)
+
+get_depends(.path = getwd(), name)
 }
 \arguments{
-\item{.path}{Path to the \code{eatDaT} repository. Defaults to the current working directory.}
+\item{.path}{Path to the \code{eatDataTest} repository. Defaults to the current working directory.}
 
 \item{name}{Name of the data set. The file will be named accordingly.}
+
+\item{absolute_paths}{Should paths in \code{release} and \code{oldrel} be converted to absolute paths?}
 }
 \value{
-Returns a named list.
+Returns a named list with the following entries:
+\itemize{
+\item \code{version}: Version number of the current data set.
+\item \code{release}: Path to the current data version.
+\item \code{oldrel}: Path to the previous data version.
+\item \code{depends}: What other data sets does this data set depend on? List of data set names separated by \code{", "}.
+}
 }
 \description{
-Reads a data yaml that contains paths to the current data version (\code{'release_path'}),
-the previous version (\code{'oldrel_path'})
-and the current version number (\code{'version'}).
+\code{read_data_yaml()} reads a data yaml that has been created via \code{create_data_yaml()}.
+The respective get-functions are wrappers around \code{read_data_yaml()} and simply return a single character value.
 }
 \examples{
 ## tbd
