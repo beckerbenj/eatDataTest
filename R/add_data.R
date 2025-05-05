@@ -23,7 +23,9 @@
 add_data <- function(.path = getwd(), name, release_path, oldrel_path = NULL,
                      version = "v1.0", depends = NULL) {
   # input validation
+  validate_path(.path)
 
+  # file path
   file_path <- file.path(.path, "data", paste0(name, ".yaml"))
 
   # yaml
