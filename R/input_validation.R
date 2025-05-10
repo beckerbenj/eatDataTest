@@ -27,3 +27,13 @@ validate_version <- function(version) {
 }
 
 
+validate_data_path <- function(path){
+  file_extension <- tolower(tools::file_ext(path))
+  allowed_extensions <- c("rds", "sav")
+  checkmate::assert_choice(file_extension, allowed_extensions, .var.name = "file extension of path")
+
+  # checks that the file exists, access = "r" ensures it’s readable
+  checkmate::assert_file_exists(path, access = "r")
+}
+
+
