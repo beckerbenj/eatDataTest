@@ -28,6 +28,15 @@ test_that("compare actual data", {
   expect_equal(as.character(out$v1[2, ]), c("release", NA, 1, 2))
 })
 
+test_that("compare actual data with no differences", {
+  out <- compare_actual_data(gads1, gads1, ID_var = "id")
+
+  expect_equal(out$vars_with_differences,
+               data.frame(varName = character(), varLabel = character()),
+               ignore_attr = TRUE)
+  expect_equal(length(out), 1)
+})
+
 
 test_that("input validation create_diff", {
   expect_error(create_diff(.path = test_path("helper_example_repo"),

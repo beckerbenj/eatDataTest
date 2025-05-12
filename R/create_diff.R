@@ -82,7 +82,7 @@ compare_actual_data <- function(data1, data2, name_data1 = "data1", name_data2 =
 
   out <- vector(mode = "list", length = length(out_list_var) + 1)
   out[[1]] <- diff_overview
-  if(length(diff_overview) > 0) {
+  if(nrow(diff_overview) > 0) {
     out[2:(length(out_list_var) + 1)] <- out_list_var
   }
 
