@@ -1,8 +1,8 @@
 # Input validation helpers for eatDataTest
 
-validate_path <- function(.path){
+validate_directory_path <- function(path){
   # checks that the path exists and is a directory, access = "r" ensures it’s readable
-  checkmate::assert_directory_exists(.path, access = "r")
+  checkmate::assert_directory_exists(path, access = "r")
 }
 
 validate_version <- function(version) {
@@ -34,6 +34,19 @@ validate_data_path <- function(path){
 
   # checks that the file exists, access = "r" ensures it’s readable
   checkmate::assert_file_exists(path, access = "r")
+}
+
+
+
+validate_data_name <- function(name) { # 'validate_name' already exists in read_data_yaml.R
+  # type string, no NA, at least one character
+  checkmate::assert_string(name, min.chars = 1)
+  # only allow letters, digits or underscores
+  coll <- checkmate::makeAssertCollection()
+  if (!grepl("^[a-zA-Z0-9_]+$", name)) {
+      coll$push("Name must only contain letters, digits, or underscores.")
+  }
+  checkmate::reportAssertions(coll)
 }
 
 
