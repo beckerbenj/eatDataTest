@@ -21,7 +21,8 @@
 #'@export
 compare_meta_data_where_possible <- function(data1, data2, suffix = NULL, ID_var) {
   # input validation
-
+  eatGADS:::check_vars_in_GADSdat(data1, vars = ID_var, argName = "ID_var", GADSdatName = "data1")
+  eatGADS:::check_vars_in_GADSdat(data2, vars = ID_var, argName = "ID_var", GADSdatName = "data2")
 
   names1 <- eatGADS::namesGADS(data1)
   names2 <- eatGADS::namesGADS(data2)
@@ -39,9 +40,6 @@ compare_meta_data_where_possible <- function(data1, data2, suffix = NULL, ID_var
   }
 
   common_names <- intersect(eatGADS::namesGADS(data1), eatGADS::namesGADS(data2))
-  if(length(setdiff(common_names, ID_var)) < 1) {
-    stop("No variables to compare.")
-  }
 
   suppressMessages(data1_sub <- eatGADS::extractVars(data1, vars = common_names))
   suppressMessages(data2_sub <- eatGADS::extractVars(data2, vars = common_names))
