@@ -50,3 +50,37 @@ validate_data_name <- function(name) { # 'validate_name' already exists in read_
 }
 
 
+validate_depends <- function(.path = getwd(), depends) {
+
+  # type string, no NA, at least one character
+  checkmate::assertString(depends)
+
+  # Split into individual names
+  depends_list <- strsplit(depends, split = ",\\s*")[[1]]
+
+  coll <- checkmate::makeAssertCollection()
+
+  # check if the splitting worked properly
+  if (length(depends_list) == 0 || any(depends_list == "")) {
+    coll$push("Depends string must contain valid dataset names separated by commas (e.g., 'dataset1, dataset2').")
+  }
+
+  # assess existence of the individual files
+  for (dep in depends_list) {
+    yaml_file <- file.path(.path, "data", paste0(dep, ".yaml"))
+    if (!file.exists(yaml_file)) {
+      coll$push(sprintf("Missing YAML file for dependency: '%s' (%s)", dep, yaml_file))
+    }
+  }
+
+  checkmate::reportAssertions(coll)
+}
+
+
+# TO DO
+# moved this here from read_data_yaml
+validate_yaml <- function(.path = getwd(), name) {
+  yaml_file <- file.path(.path, "data", paste0(dep, ".yaml"))
+}
+
+
