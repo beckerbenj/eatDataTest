@@ -3,6 +3,19 @@
 validate_directory_path <- function(path){
   # checks that the path exists and is a directory, access = "r" ensures it’s readable
   checkmate::assert_directory_exists(path, access = "r")
+
+  # check that all necessary sub-directories exist
+  expected_subdirs <- c("data", "changelogs", "tests")
+  actual_subdirs <- list.dirs(path, recursive = FALSE, full.names = FALSE)
+
+  coll <- checkmate::makeAssertCollection()
+
+  for (subdir in expected_subdirs) {
+    if (!(subdir %in% actual_subdirs)) {
+      coll$push(sprintf("Missing required subdirectory: '%s/' in '%s'. Try calling `setup_eatDataTest()` first.", subdir, path))
+    }
+  }
+  checkmate::reportAssertions(coll)
 }
 
 validate_version <- function(version) {
@@ -65,7 +78,7 @@ validate_depends <- function(.path = getwd(), depends) {
     coll$push("Depends string must contain valid dataset names separated by commas (e.g., 'dataset1, dataset2').")
   }
 
-  # assess existence of the individual files
+  # check existence of the individual files
   for (dep in depends_list) {
     yaml_file <- file.path(.path, "data", paste0(dep, ".yaml"))
     if (!file.exists(yaml_file)) {
