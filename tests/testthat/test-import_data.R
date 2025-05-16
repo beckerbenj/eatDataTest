@@ -19,6 +19,13 @@ test_that("data import from .RDS", {
   expect_equal(nrow(RDS_gads$dat), 10)
 })
 
+test_that("data.frame import from .RDS", {
+  RDS_df <- import_data(.path = test_path("helper_example_repo"),
+                          name = "helper_data3", data_version = "oldrel")
+
+  expect_equal(nrow(RDS_df), 32)
+})
+
 test_that("data import from other formats", {
   expect_error(import_data(.path = test_path("helper_example_repo"), name = "helper_data3"),
                "Unsupported file extension: RData")
