@@ -62,21 +62,3 @@ get_version <- function(.path = getwd(), name) {
 get_depends <- function(.path = getwd(), name) {
   read_data_yaml(.path = .path, name = name, absolute_paths = FALSE)$depends
 }
-
-validate_depends <- function(.path = getwd(), depends) {
-  depends_list <- strsplit(depends, split = ", ")
-
-  out <- lapply(depends_list, validate_name, .path = .path)
-  all(unlist(out))
-}
-
-validate_name <- function(.path = getwd(), name) {
-  adapted_path <- adapt_path_for_yaml_reading(.path)
-  file_path <- file.path(adapted_path, "data", paste0(name, ".yaml"))
-  file.exists(file_path)
-}
-
-# TODO
-validate_yaml <- function(.path = getwd(), name) {
-
-}
