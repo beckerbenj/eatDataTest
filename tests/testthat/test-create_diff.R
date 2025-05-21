@@ -19,17 +19,18 @@ test_that("create pretty cross table", {
 
 
 test_that("compare actual data", {
-  out <- compare_actual_data(gads1, gads2, ID_var = "id")
+  out <- compare_actual_data(gads1, gads2, id = "id")
 
   expect_equal(out$vars_with_differences,
                data.frame(varName = c("v1", "v2"), varLabel = NA_character_),
                ignore_attr = TRUE)
-  expect_equal(as.character(out$v1[1, ]), c(NA, "oldrel", NA, NA))
-  expect_equal(as.character(out$v1[2, ]), c("release", NA, 1, 2))
+  expect_equal(as.character(out$v1[1, ]), c(NA, "oldrel", NA))
+  expect_equal(as.character(out$v1[2, ]), c("release", NA, 2))
+  expect_equal(as.character(out$v1[3, ]), c(NA_character_, 3, 2))
 })
 
 test_that("compare actual data with no differences", {
-  out <- compare_actual_data(gads1, gads1, ID_var = "id")
+  out <- compare_actual_data(gads1, gads1, id = "id")
 
   expect_equal(out$vars_with_differences,
                data.frame(varName = character(), varLabel = character()),
@@ -40,20 +41,20 @@ test_that("compare actual data with no differences", {
 
 test_that("input validation create_diff", {
   expect_error(create_diff(.path = test_path("helper_example_repo"),
-                               name = "helper_data_no_oldrel", ID_var = "ID"),
+                               name = "helper_data_no_oldrel", id = "ID"),
                "No oldrel path specified. No meaningful diff can be computed.")
 })
 
 test_that("create data and meta data diff", {
   suppressMessages(create_diff(.path = test_path("helper_example_repo"),
-                                    name = "helper_data1", ID_var = "ID"))
+                                    name = "helper_data1", id = "ID"))
 
   data_path <- test_path("helper_example_repo/diff/helper_data1_data_diff.xlsx")
   meta_path <- test_path("helper_example_repo/diff/helper_data1_meta_diff.xlsx")
 
   expect_equal(readxl::excel_sheets(meta_path),
                c("not_in_release_data", "not_in_oldrel_data",
-                "differences_variable_labels", "differences_value_labels"))
+                "differences_variable_level", "differences_value_level"))
   expect_equal(readxl::read_xlsx(meta_path, sheet = 2)$varName, c("info", "age", "career"))
   expect_equal(readxl::read_xlsx(meta_path, sheet = 3)$varName, c("ID_name", "school"))
 

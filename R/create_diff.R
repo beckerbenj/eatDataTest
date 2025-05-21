@@ -1,66 +1,95 @@
 #' Create Data and Meta Data Diff.
 #'
-#' Create a data diff that contains a list of differing variables and cross tables
-#' for each differing variable as well as a meta data diff.
+#' `create_meta_diff` creates a list of differing variables as well as lists of meta differences
+#' on variable and on value level.
+#' `create_data_diff` create a list of differing variables and a cross tables
+#' for each differing variable.
+#' `create_diff` calls both functions.
 #'
-#'@param .path Path to the `eatDaT` repository. Defaults to the current working directory.
+#'@param .path Path to the `eatDataTest` repository. Defaults to the current working directory.
 #'@param name Name of the data set. The file will be named accordingly.
-#'@param ID_var Name of the id variable in both data set.
+#'@param id Name of the id variable(s) in both data set.
+#'@param tolerance A numeric value greater than or equal to 0. Differences smaller than `tolerance` are not reported. The default value is close to 1.5e-8.
 #'
-#'@return Creates a .xlsx. Returns `NULL`.
+#'@return Creates two `.xlsx` files. Returns `NULL`.
 #'
 #'@examples
 #'## tbd
 #'
 #'@export
-create_diff <- function(.path = getwd(), name, ID_var) {
+create_diff <- function(.path = getwd(), name, id, tolerance = sqrt(.Machine$double.eps)) {
+  create_meta_diff(.path = .path, name = name)
+  create_data_diff(.path = .path, name = name, id = id, tolerance = tolerance)
+
+  invisible(return())
+}
+
+#'@rdname create_diff
+#'@export
+create_meta_diff <- function(.path = getwd(), name) {
   # input validation
   if(is.null(get_oldrel_path(.path = .path, name = name))) {
     stop("No oldrel path specified. No meaningful diff can be computed.")
   }
 
   meta_path <- file.path(.path, "diff", paste0(name, "_meta_diff.xlsx"))
-  data_path <- file.path(.path, "diff", paste0(name, "_data_diff.xlsx"))
 
   release_data <- import_data(.path = .path, name = name, data_version = "release")
   oldrel_data <- import_data(.path = .path, name = name, data_version = "oldrel")
 
   meta_comparison <- eatFDZ::compare_data(data1 = release_data,
                                           data2 = oldrel_data,
-                                          ID_var = ID_var,
                                           name_data1 = "release",
                                           name_data2 = "oldrel")
 
-  data_comparison <- compare_actual_data(data1 = release_data,
-                                          data2 = oldrel_data,
-                                          ID_var = ID_var,
-                                          name_data1 = "release",
-                                          name_data2 = "oldrel")
-
-
-  overwritexl(data_comparison, path = data_path)
   overwritexl(meta_comparison, path = meta_path)
 
   invisible(return())
 }
 
+#'@rdname create_diff
+#'@export
+create_data_diff <- function(.path = getwd(), name, id, tolerance = sqrt(.Machine$double.eps)) {
+  # input validation
+  if(is.null(get_oldrel_path(.path = .path, name = name))) {
+    stop("No oldrel path specified. No meaningful diff can be computed.")
+  }
 
-compare_actual_data <- function(data1, data2, name_data1 = "data1", name_data2 = "data2", ID_var) {
+  data_path <- file.path(.path, "diff", paste0(name, "_data_diff.xlsx"))
+
+  release_data <- import_data(.path = .path, name = name, data_version = "release")
+  oldrel_data <- import_data(.path = .path, name = name, data_version = "oldrel")
+
+  data_comparison <- compare_actual_data(data1 = release_data,
+                                         data2 = oldrel_data,
+                                         name_data1 = "release",
+                                         name_data2 = "oldrel",
+                                         id = id,
+                                         tolerance = tolerance)
+
+
+  overwritexl(data_comparison, path = data_path)
+
+  invisible(return())
+}
+
+
+compare_actual_data <- function(data1, data2, name_data1 = "data1", name_data2 = "data2",
+                                id, tolerance = sqrt(.Machine$double.eps)) {
   ## input validation
   # ----------------------------------------------------------
   eatGADS:::check_GADSdat(data1)
   eatGADS:::check_GADSdat(data2)
 
-  eatGADS:::check_characterArgument(ID_var, argName = "ID_var")
   eatGADS:::check_characterArgument(name_data1, argName = "name_data1")
   eatGADS:::check_characterArgument(name_data2, argName = "name_data2")
 
-  eatGADS:::check_vars_in_GADSdat(data1, vars = ID_var, argName = "ID_var", GADSdatName = "data1")
-  eatGADS:::check_vars_in_GADSdat(data2, vars = ID_var, argName = "ID_var", GADSdatName = "data2")
+  eatGADS:::check_vars_in_GADSdat(data1, vars = id, argName = "id", GADSdatName = "data1")
+  eatGADS:::check_vars_in_GADSdat(data2, vars = id, argName = "id", GADSdatName = "data2")
 
   ## initiate comparison
   # ----------------------------------------------------------
-  eatGADS_comparison <- eatGADS::equalGADS(data1, data2, id = ID_var)
+  eatGADS_comparison <- eatGADS::equalData(data1, data2, id = id, tolerance = tolerance)
 
 
   ## general overview
@@ -72,7 +101,7 @@ compare_actual_data <- function(data1, data2, name_data1 = "data1", name_data2 =
   ## specific cross tables
   # ----------------------------------------------------------
   out_list_var <- lapply(eatGADS_comparison$data_differences, function(nam) {
-    inspectDifferences2(data1, other_GADSdat = data2, varName = nam, id = ID_var)
+    inspectDifferences2(data1, other_GADSdat = data2, varName = nam, id = id)
     #out <- inspectDifferences2(data1, other_GADSdat = data2, varName = nam, id = ID_var)
     #browser()
     #names(dimnames(out)) <- c(name_data1, name_data2)
@@ -100,28 +129,6 @@ overwritexl <- function(x, path){
 }
 
 inspectDifferences2 <- function(GADSdat, varName, other_GADSdat = GADSdat, other_varName = varName, id) {
-  eatGADS:::check_GADSdat(GADSdat)
-  eatGADS:::check_GADSdat(other_GADSdat)
-  eatGADS:::check_characterArgument(varName, argName = "varName")
-  eatGADS:::check_characterArgument(other_varName, argName = "other_varName")
-  eatGADS:::check_characterArgument(id, argName = "id")
-  eatGADS:::check_vars_in_GADSdat(GADSdat, vars = varName, argName = "varName", GADSdatName = "GADSdat")
-  eatGADS:::check_vars_in_GADSdat(other_GADSdat, vars = other_varName, argName = "other_varName", GADSdatName = "other_GADSdat")
-  eatGADS:::check_vars_in_GADSdat(GADSdat, vars = id, argName = "id", GADSdatName = "GADSdat")
-  eatGADS:::check_vars_in_GADSdat(other_GADSdat, vars = id, argName = "id", GADSdatName = "other_GADSdat")
-
-  #if(nrow(GADSdat$dat) != nrow(other_GADSdat$dat)) stop("'GADSdat' and 'other_GADSdat' have different row numbers.")
-  if(any(is.na(GADSdat$dat[, id]))) stop("Missing values in 'id' column of 'GADSdat'.")
-  if(any(is.na(other_GADSdat$dat[, id]))) stop("Missing values in 'id' column of 'other_GADSdat'.")
-  #if(any(GADSdat$dat[, id] != other_GADSdat$dat[, id])) stop("'id' column is not equal for 'GADSdat' and 'other_GADSdat'.")
-
-  if(is.numeric(GADSdat$dat[, varName]) && !is.numeric(other_GADSdat$dat[, other_varName])) {
-    stop("'varName' column is numeric in 'GADSdat' but 'other_varName' is not numeric in 'other_GADSdat'.")
-  }
-  if(!is.numeric(GADSdat$dat[, varName]) && is.numeric(other_GADSdat$dat[, other_varName])) {
-    stop("'other_varName' column is numeric in 'other_GADSdat' but 'varName' is not numeric in 'GADSdat'.")
-  }
-
   if(isTRUE(all.equal(GADSdat$dat[, varName], other_GADSdat$dat[, other_varName], scale = 1))) {
     return("all.equal")
   }
@@ -132,10 +139,28 @@ inspectDifferences2 <- function(GADSdat, varName, other_GADSdat = GADSdat, other
     nam_dnn <- c("release", "oldrel") # could/should this be more generic?
   }
 
+  #browser()
+
+  cli::cli_alert_info(paste0("Comparing ", varName))
   merged_df <- merge(GADSdat$dat[, c(id, varName)], other_GADSdat$dat[, c(id, other_varName)],
                      by = id, all = TRUE)
 
-  cross_table_as_data_frame(merged_df[, length(id) + 1], merged_df[, length(id) + 2], useNA = "ifany",
+  position_varname <- length(id) + 1
+  position_other_varname <- length(id) + 2
+
+  merged_df[, position_varname] <- ifelse(is.na(merged_df[, position_varname]), "NA", merged_df[, position_varname])
+  merged_df[, position_other_varname] <- ifelse(is.na(merged_df[, position_other_varname]), "NA", merged_df[, position_other_varname])
+
+  # comparing again, as merging/ordering may have solved the issue
+  if(isTRUE(all.equal(merged_df[, position_varname], merged_df[, position_other_varname], scale = 1))) {
+    return("all.equal")
+  }
+
+  rows_with_differences <- merged_df[, position_varname] != merged_df[, position_other_varname]
+
+
+  cross_table_as_data_frame(merged_df[rows_with_differences, position_varname],
+                            merged_df[rows_with_differences, position_other_varname], useNA = "ifany",
                             name1 = nam_dnn[1], name2 = nam_dnn[2])
 
 }
