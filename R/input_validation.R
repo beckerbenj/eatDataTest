@@ -1,14 +1,15 @@
 # Input validation helpers for eatDataTest
 
 validate_directory_path <- function(path){
+  # makeAssertCollection: collect all error messages
+  coll <- checkmate::makeAssertCollection()
+
   # checks that the path exists and is a directory, access = "r" ensures it’s readable
-  checkmate::assert_directory_exists(path, access = "r")
+  checkmate::assert_directory_exists(path, access = "r", add = coll)
 
   # check that all necessary sub-directories exist
   expected_subdirs <- c("data", "changelogs", "tests")
   actual_subdirs <- list.dirs(path, recursive = FALSE, full.names = FALSE)
-
-  coll <- checkmate::makeAssertCollection()
 
   for (subdir in expected_subdirs) {
     if (!(subdir %in% actual_subdirs)) {
@@ -19,11 +20,12 @@ validate_directory_path <- function(path){
 }
 
 validate_version <- function(version) {
+  coll <- checkmate::makeAssertCollection()
+
   # version is a string
-  checkmate::assert_string(version)
+  checkmate::assert_string(version, add = coll)
 
   # starts with "v", then one or more digits, then a dot, then one or more digits
-  coll <- checkmate::makeAssertCollection()
   if(!grepl("^v", version)){
     coll$push("Version must start with a lowercase 'v' (e.g. 'v1.0').")
   }
@@ -41,21 +43,27 @@ validate_version <- function(version) {
 
 
 validate_data_path <- function(path){
+  coll <- checkmate::makeAssertCollection()
+
+  checkmate::assert_string(path, add = coll)
+
   file_extension <- tolower(tools::file_ext(path))
   allowed_extensions <- c("rds", "sav")
-  checkmate::assert_choice(file_extension, allowed_extensions, .var.name = "file extension of path")
+  checkmate::assert_choice(file_extension, allowed_extensions, .var.name = "file extension of path", add = coll)
 
   # checks that the file exists, access = "r" ensures it’s readable
-  checkmate::assert_file_exists(path, access = "r")
+  checkmate::assert_file_exists(path, access = "r", add = coll)
+
+  checkmate::reportAssertions(coll)
 }
 
 
 
 validate_data_name <- function(name) { # 'validate_name' already exists in read_data_yaml.R
-  # type string, no NA, at least one character
-  checkmate::assert_string(name, min.chars = 1)
-  # only allow letters, digits or underscores
   coll <- checkmate::makeAssertCollection()
+  # type string, no NA, at least one character
+  checkmate::assert_string(name, min.chars = 1, add = coll)
+  # only allow letters, digits or underscores
   if (!grepl("^[a-zA-Z0-9_]+$", name)) {
       coll$push("Name must only contain letters, digits, or underscores.")
   }
@@ -64,14 +72,13 @@ validate_data_name <- function(name) { # 'validate_name' already exists in read_
 
 
 validate_depends <- function(.path = getwd(), depends) {
+  coll <- checkmate::makeAssertCollection()
 
   # type string, no NA, at least one character
-  checkmate::assertString(depends)
+  checkmate::assertString(depends, add = coll)
 
   # Split into individual names
   depends_list <- strsplit(depends, split = ",\\s*")[[1]]
-
-  coll <- checkmate::makeAssertCollection()
 
   # check if the splitting worked properly
   if (length(depends_list) == 0 || any(depends_list == "")) {
