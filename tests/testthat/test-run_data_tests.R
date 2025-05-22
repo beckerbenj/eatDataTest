@@ -27,6 +27,7 @@ test_that("run successfull data tests", {
   expect_true(grepl("Running tests for data set helper_data1:\n", mess[1]))
   expect_true(grepl("All tests passing!\n", mess[2]))
   expect_true(grepl("Updating icon...\n", mess[3]))
+  expect_true(grepl("Updating version...\n", mess[4]))
 })
 
 test_that("run failing data tests", {
@@ -42,4 +43,15 @@ test_that("run failing data tests", {
   expect_true(grepl("Updating icon...\n", mess[3]))
 })
 
-# TODO: actually check for .svgs
+test_that("run successfull data tests", {
+  f <- tempfile(fileext = ".svg")
+  create_and_download_badge("v1.2", download_path = f)
+
+  out <- readLines(f, warn = FALSE)
+  reference_badge <- readLines(test_path("helper_version_1_2_black.svg"), warn = FALSE)
+
+  expect_equal(out, reference_badge)
+})
+
+
+# TODO: actually check for all .svgs

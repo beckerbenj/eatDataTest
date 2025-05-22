@@ -5,6 +5,7 @@
 #' * a markdown changelog (`.md` file)
 #' * a test file (`.R` file in `tests`)
 #' * an initial test result icon (`.svg` file in `tests`)
+#' * an initial version badge (`.svg` file in `tests`)
 #' * a snippet which can be inserted into the `Readme.md`.
 #'
 #'@param .path Path to the `eatDataTest` repository. Defaults to the current working directory.
@@ -43,6 +44,11 @@ add_data <- function(.path = getwd(), name, release_path, oldrel_path = NULL,
   # initialized test result icon (fail)
   create_initial_test_result(.path = .path, name = name)
   cli::cli_alert_success("Initialized test result icon.")
+
+  # initialized version badge
+  version_path <- file.path(.path, "tests", paste0("version-", name, ".svg"))
+  create_and_download_badge(version_number = version, download_path = version_path)
+  cli::cli_alert_success("Initialized version badge.")
   cli::cli_end()
 
   # markdown entry (copy & paste?) for readem
@@ -95,7 +101,7 @@ create_initial_test_result <- function(.path = getwd(), name) {
 create_readme_snippet <- function(name, version = "v1.0") {
   # input validation
 
-  md_content <- paste0("| ", name, "              | ", version, "    | ![s](tests/result-", name, ".svg) |")
+  md_content <- paste0("| ", name, "              | ![s](tests/version-", name, ".svg)    | ![s](tests/result-", name, ".svg) |")
   md_content
 }
 

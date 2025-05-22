@@ -41,7 +41,7 @@ test_that("create readme snippet", {
   out <- create_readme_snippet(name = "data1", version = "v1.0")
 
   expect_equal(out,
-               "| data1              | v1.0    | ![s](tests/result-data1.svg) |")
+               "| data1              | ![s](tests/version-data1.svg)    | ![s](tests/result-data1.svg) |")
 })
 
 if(clipr::clipr_available()) {
@@ -50,7 +50,7 @@ if(clipr::clipr_available()) {
                                      version = "v1.0"))
 
     expect_equal(out,
-                 "| data1              | v1.0    | ![s](tests/result-data1.svg) |")
+                 "| data1              | ![s](tests/version-data1.svg)    | ![s](tests/result-data1.svg) |")
   })
 }
 

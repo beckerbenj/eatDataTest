@@ -4,7 +4,12 @@
 \alias{run_data_tests}
 \title{Run Data Tests.}
 \usage{
-run_data_tests(.path = getwd(), name, overwrite_icon = TRUE)
+run_data_tests(
+  .path = getwd(),
+  name,
+  overwrite_icon = TRUE,
+  overwrite_version = TRUE
+)
 }
 \arguments{
 \item{.path}{Path to the \code{eatDataTest} repository. Defaults to the current working directory.}
@@ -12,6 +17,8 @@ run_data_tests(.path = getwd(), name, overwrite_icon = TRUE)
 \item{name}{Name of the data set.}
 
 \item{overwrite_icon}{Should the result icon in the \code{tests} folder be overwritten?}
+
+\item{overwrite_version}{Should the version number in the \code{tests} folder be overwritten?}
 }
 \value{
 Creates a test result icon. Returns \code{NULL}.
