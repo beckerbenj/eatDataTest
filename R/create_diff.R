@@ -116,6 +116,20 @@ compare_actual_data <- function(data1, data2, name_data1 = "data1", name_data2 =
   }
 
   names(out) <- c("vars_with_differences", eatGADS_comparison$data_differences)
+
+  all_equal_in_out <- sapply(out, function(single_out){
+    identical(single_out, "all.equal")
+  })
+  all_equal_names <- names(out)[all_equal_in_out]
+
+  ## eatDataTest should support that equalGADS() reports differences but inspectDifferences2() returns all.equal()
+  # maybe remove from diff_overview as well?
+  for(nam in all_equal_names) {
+    #browser()
+    out[nam] <- NULL
+    out$vars_with_differences <- out$vars_with_differences[out$vars_with_differences$varName != nam, ]
+  }
+
   out
 }
 
