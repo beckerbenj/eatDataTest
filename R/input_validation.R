@@ -8,7 +8,7 @@ validate_directory_path <- function(path){
   checkmate::assert_directory_exists(path, access = "r", add = coll)
 
   # check that all necessary sub-directories exist
-  expected_subdirs <- c("data", "changelogs", "tests")
+  expected_subdirs <- c("data", "changelogs", "tests", "diff")
   actual_subdirs <- list.dirs(path, recursive = FALSE, full.names = FALSE)
 
   for (subdir in expected_subdirs) {
