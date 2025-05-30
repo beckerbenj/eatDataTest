@@ -106,7 +106,7 @@ validate_depends <- function(path = getwd(), depends) {
 # TO DO
 # moved this here from read_data_yaml
 validate_yaml <- function(.path = getwd(), name) {
-  yaml_file <- file.path(.path, "data", paste0(dep, ".yaml"))
+  #yaml_file <- file.path(.path, "data", paste0(dep, ".yaml"))
 }
 
 

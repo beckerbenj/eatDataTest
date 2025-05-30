@@ -5,7 +5,7 @@ Authors@R:
     person("Benjamin", "Becker", , "b.becker@iqb.hu-berlin.de", role = c("aut", "cre"))
 Description: Provides a framework for unit testing and diff creation of data sets. 
 Depends: R (>= 4.4.0)
-Imports: eatGADS, yaml, writexl, eatFDZ, pkgload, clipr, cli, whisker
+Imports: eatGADS, yaml, writexl, eatFDZ, pkgload, clipr, cli, whisker, checkmate
 URL: https://github.com/beckerbenj/eatDataTest,
     https://beckerbenj.github.io/eatDataTest/
 License: GPL (>= 2)
