@@ -2,8 +2,11 @@
 
 validate_directory_path <- function(path){
 
+  # path needs to be passed as a string
+  checkmate::assert_string(path)
+
   # checks that the path exists and is a directory, access = "r" ensures it’s readable
-  checkmate::assert_directory_exists(path, access = "r", add = coll)
+  checkmate::assert_directory_exists(path, access = "r")
 
   # check that all necessary sub-directories exist
   # makeAssertCollection: collect all error messages
@@ -20,13 +23,14 @@ validate_directory_path <- function(path){
   checkmate::reportAssertions(coll)
 }
 
+
 validate_version <- function(version) {
-  coll <- checkmate::makeAssertCollection()
 
   # version is a string
-  checkmate::assert_string(version, add = coll)
+  checkmate::assert_string(version)
 
   # starts with "v", then one or more digits, then a dot, then one or more digits
+  coll <- checkmate::makeAssertCollection() # for custom error messages
   if(!grepl("^v", version)){
     coll$push("Version must start with a lowercase 'v' (e.g. 'v1.0').")
   }
@@ -44,27 +48,27 @@ validate_version <- function(version) {
 
 
 validate_data_path <- function(path, argName = "path"){
-  coll <- checkmate::makeAssertCollection()
 
-  checkmate::assert_string(path, add = coll)
+  # path needs to be passed as a string
+  checkmate::assert_string(path)
 
+  # the file exists, access = "r" ensures it’s readable
+  checkmate::assert_file_exists(path, access = "r", .var.name = argName)
+
+  # must have the correct file extension: "rds" or "sav"
   file_extension <- tolower(tools::file_ext(path))
   allowed_extensions <- c("rds", "sav")
-  checkmate::assert_choice(file_extension, allowed_extensions, .var.name = paste0("file extension of ", argName), add = coll)
-
-  # checks that the file exists, access = "r" ensures it’s readable
-  checkmate::assert_file_exists(path, access = "r", .var.name = argName, add = coll)
-
-  checkmate::reportAssertions(coll)
+  checkmate::assert_choice(file_extension, allowed_extensions, .var.name = paste0("file extension of ", argName))
 }
 
 
-
 validate_new_data_name <- function(name) { # 'validate_name' already exists in read_data_yaml.R
-  coll <- checkmate::makeAssertCollection()
+
   # type string, no NA, at least one character
-  checkmate::assert_string(name, min.chars = 1, add = coll)
+  checkmate::assert_string(name, min.chars = 1)
+
   # only allow letters, digits or underscores
+  coll <- checkmate::makeAssertCollection()
   if (!grepl("^[a-zA-Z0-9_]+$", name)) {
       coll$push("Name must only contain letters, digits, or underscores.")
   }
@@ -72,28 +76,29 @@ validate_new_data_name <- function(name) { # 'validate_name' already exists in r
 }
 
 
-validate_depends <- function(.path = getwd(), depends) {
-  coll <- checkmate::makeAssertCollection()
+validate_depends <- function(path = getwd(), depends) {
 
   # type string, no NA, at least one character
-  checkmate::assertString(depends, add = coll)
+  checkmate::assertString(depends)
 
   # Split into individual names
   depends_list <- strsplit(depends, split = ",\\s*")[[1]]
 
   # check if the splitting worked properly
+  coll <- checkmate::makeAssertCollection()
   if (length(depends_list) == 0 || any(depends_list == "")) {
-    coll$push("Depends string must contain valid dataset names separated by commas (e.g., 'dataset1, dataset2').")
-  }
+    coll$push("depends string must contain valid dataset names separated by commas (e.g., 'dataset1, dataset2').")
+  } else { # if splitting worked, continue more checks
 
-  # check existence of the individual files
-  for (dep in depends_list) {
-    yaml_file <- file.path(.path, "data", paste0(dep, ".yaml"))
-    if (!file.exists(yaml_file)) {
-      coll$push(sprintf("Missing YAML file for dependency: '%s' (%s)", dep, yaml_file))
+    # check existence of the individual files
+    for (dep in depends_list) {
+      yaml_file <- file.path(path, "data", paste0(dep, ".yaml"))
+      if (!file.exists(yaml_file)) {
+        coll$push(sprintf("Missing YAML file for dependency: '%s' (%s)", dep, yaml_file))
+      }
     }
-  }
 
+  }
   checkmate::reportAssertions(coll)
 }
 
