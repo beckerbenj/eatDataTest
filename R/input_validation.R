@@ -1,13 +1,14 @@
 # Input validation helpers for eatDataTest
 
 validate_directory_path <- function(path){
-  # makeAssertCollection: collect all error messages
-  coll <- checkmate::makeAssertCollection()
 
   # checks that the path exists and is a directory, access = "r" ensures it’s readable
   checkmate::assert_directory_exists(path, access = "r", add = coll)
 
   # check that all necessary sub-directories exist
+  # makeAssertCollection: collect all error messages
+  # & allow custom error messages ("Try calling `setup_eatDataTest()` first.")
+  coll <- checkmate::makeAssertCollection()
   expected_subdirs <- c("data", "changelogs", "tests", "diff")
   actual_subdirs <- list.dirs(path, recursive = FALSE, full.names = FALSE)
 
@@ -59,7 +60,7 @@ validate_data_path <- function(path, argName = "path"){
 
 
 
-validate_data_name <- function(name) { # 'validate_name' already exists in read_data_yaml.R
+validate_new_data_name <- function(name) { # 'validate_name' already exists in read_data_yaml.R
   coll <- checkmate::makeAssertCollection()
   # type string, no NA, at least one character
   checkmate::assert_string(name, min.chars = 1, add = coll)
