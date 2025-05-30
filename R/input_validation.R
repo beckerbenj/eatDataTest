@@ -42,17 +42,17 @@ validate_version <- function(version) {
 }
 
 
-validate_data_path <- function(path){
+validate_data_path <- function(path, argName = "path"){
   coll <- checkmate::makeAssertCollection()
 
   checkmate::assert_string(path, add = coll)
 
   file_extension <- tolower(tools::file_ext(path))
   allowed_extensions <- c("rds", "sav")
-  checkmate::assert_choice(file_extension, allowed_extensions, .var.name = "file extension of path", add = coll)
+  checkmate::assert_choice(file_extension, allowed_extensions, .var.name = paste0("file extension of ", argName), add = coll)
 
   # checks that the file exists, access = "r" ensures it’s readable
-  checkmate::assert_file_exists(path, access = "r", add = coll)
+  checkmate::assert_file_exists(path, access = "r", .var.name = argName, add = coll)
 
   checkmate::reportAssertions(coll)
 }
