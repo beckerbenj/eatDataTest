@@ -15,11 +15,16 @@ dir.create(data_dir)
 diff_dir <- file.path(test_dir, "diff")
 dir.create(diff_dir)
 
-# save a dataframe
-saveRDS(head(iris), file.path(test_dir, "iris_release.Rds"))
+# a dataframe
+example_data_path <- "./tests/testthat/helper_example_repo/data_files/example_data"
 
 # save a random text file
-writeLines("This is not a data frame.", file.path(test_dir, "iris_release.txt"))
+writeLines("This is not a data frame.", file.path(test_dir, "not_a_dataframe.txt"))
+example_text_file <- file.path(test_dir, "not_a_dataframe.txt")
+
+# a non existent file
+non_existent_file <- file.path(test_dir, "nonexistent_file.rds")
+if(!file.exists(non_existent_file)){unlink(non_existent_file, recursive = TRUE)}
 
 
 
@@ -61,6 +66,11 @@ test_that("validate_directory_path() checks subdierectories", {
   expect_error(validate_directory_path(test_dir), "Missing required subdirectory: 'diff/'")
   dir.create(diff_dir)
 
+  # test the behavior if the directory contains all required subdirectories plus others
+  extra_dir <- file.path(test_dir, "extra")
+  dir.create(extra_dir)
+  expect_silent(validate_directory_path(test_dir))
+
 })
 
 
@@ -69,6 +79,8 @@ test_that("validate_directory_path() checks subdierectories", {
 test_that("validate_version() accepts correct version format", {
   expect_silent(validate_version("v1.0"))
   expect_silent(validate_version("v123.456"))
+  expect_silent(validate_version("v0.0"))
+  expect_silent(validate_version("v001.099"))
 })
 
 test_that("validate_version() fails if input is not a string", {
@@ -78,6 +90,7 @@ test_that("validate_version() fails if input is not a string", {
 
 test_that("validate_version() requires version to start with 'v'", {
   expect_error(validate_version("1.0"), "must start with a lowercase 'v'")
+  expect_error(validate_version(" v1.0"), "must start with a lowercase 'v'") # leading whitespace
 })
 
 test_that("validate_version() requires digits after 'v'", {
@@ -101,7 +114,33 @@ test_that("validate_version() rejects too complex versions", {
 
 
 
+# validate_data_path -----------------------------------------------------------
 
+test_that("validate_data_path() accepts valid data", {
+  expect_silent(validate_data_path(paste0(example_data_path, ".rds")))
+  expect_silent(validate_data_path(paste0(example_data_path, ".sav")))
+  # should accept uppercase and mixed spelling as well:
+  expect_silent(validate_data_path(paste0(example_data_path, ".RDS")))
+  expect_silent(validate_data_path(paste0(example_data_path, ".rDs")))
+  expect_silent(validate_data_path(paste0(example_data_path, ".SAV")))
+  expect_silent(validate_data_path(paste0(example_data_path, ".sAv")))
+})
 
+test_that("validate_data_path() fails if path is not a string", {
+  expect_error(validate_data_path(123), "Must be of type 'string', not 'double'.")
+  expect_error(validate_data_path(TRUE), "Must be of type 'string', not 'logical'.")
+})
 
+test_that("validate_data_path() fails if file does not exist", {
+  expect_error(validate_data_path(non_existent_file), "File does not exist")
+})
+
+test_that("validate_data_path() fails if file extension is not rds or sav", {
+  expect_error(validate_data_path(example_text_file), "Must be element of set \\{'rds','sav'\\}, but is 'txt'")
+})
+
+test_that("validate_data_path() includes custom argName in error messages", {
+  expect_error(validate_data_path(non_existent_file, "my_data"), "my_data")
+  expect_error(validate_data_path(example_text_file, "my_data"), "my_data")
+})
 
