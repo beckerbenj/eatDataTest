@@ -8,19 +8,15 @@ validate_directory_path <- function(path){
   # checks that the path exists and is a directory, access = "r" ensures it’s readable
   checkmate::assert_directory_exists(path, access = "r")
 
-  # check that all necessary sub-directories exist
-  # makeAssertCollection: collect all error messages
-  # & allow custom error messages ("Try calling `setup_eatDataTest()` first.")
-  coll <- checkmate::makeAssertCollection()
   expected_subdirs <- c("data", "changelogs", "tests", "diff")
   actual_subdirs <- list.dirs(path, recursive = FALSE, full.names = FALSE)
+  missing_subdirs <- setdiff(expected_subdirs, actual_subdirs)
 
-  for (subdir in expected_subdirs) {
-    if (!(subdir %in% actual_subdirs)) {
-      coll$push(sprintf("Missing required subdirectory: '%s/' in '%s'. Try calling `setup_eatDataTest()` first.", subdir, path))
-    }
+  if (length(missing_subdirs) > 0) {
+    stop("The following required subdirectories are missing from '", path, "': ",
+        paste(missing_subdirs, collapse = ", "), ". Try running `setup_eatDataTest()` to create them."
+    )
   }
-  checkmate::reportAssertions(coll)
 }
 
 
