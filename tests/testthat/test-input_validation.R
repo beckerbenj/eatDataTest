@@ -52,20 +52,24 @@ test_that("validate_directory_path() checks subdierectories", {
   # validation test should fail if one subdirectory is missing
 
   unlink(changelog_dir, recursive = TRUE)
-  expect_error(validate_directory_path(test_dir), "Missing required subdirectory: 'changelogs/'")
+  expect_error(validate_directory_path(test_dir), "changelogs")
   dir.create(changelog_dir)
 
   unlink(tests_dir, recursive = TRUE)
-  expect_error(validate_directory_path(test_dir), "Missing required subdirectory: 'tests/'")
+  expect_error(validate_directory_path(test_dir), "tests")
   dir.create(tests_dir)
 
   unlink(data_dir, recursive = TRUE)
-  expect_error(validate_directory_path(test_dir), "Missing required subdirectory: 'data/'")
+  expect_error(validate_directory_path(test_dir), "data")
   dir.create(data_dir)
 
   unlink(diff_dir, recursive = TRUE)
-  expect_error(validate_directory_path(test_dir), "Missing required subdirectory: 'diff/'")
+  expect_error(validate_directory_path(test_dir), "diff")
+
+  unlink(changelog_dir, recursive = TRUE)
+  expect_error(validate_directory_path(test_dir), "changelogs, diff")
   dir.create(diff_dir)
+  dir.create(changelog_dir)
 
   # test the behavior if the directory contains all required subdirectories plus others
   extra_dir <- file.path(test_dir, "extra")
