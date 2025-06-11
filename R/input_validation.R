@@ -5,7 +5,7 @@ validate_directory_path <- function(path){
   # path needs to be passed as a string
   checkmate::assert_string(path)
 
-  # checks that the path exists and is a directory, access = "r" ensures it’s readable
+  # checks that the path exists and is a directory, access = "r" ensures it is readable
   checkmate::assert_directory_exists(path, access = "r")
 
   expected_subdirs <- c("data", "changelogs", "tests", "diff")
@@ -29,13 +29,13 @@ validate_version <- function(version) {
   if(!grepl("^v", version)){
     stop("Version must start with a lowercase 'v' (e.g. 'v1.0').")
   }
-  else if(!grepl("^v\\d+", version)){
+  if(!grepl("^v\\d+", version)){
     stop("Version must have one or more digits immediately after 'v' (e.g. 'v1.0').")
   }
-  else if(!grepl("^v\\d+\\.", version)){
+  if(!grepl("^v\\d+\\.", version)){
     stop("Version must include a dot after the digits (e.g. 'v1.0').")
   }
-  else if(!grepl("^v\\d+\\..+", version)){
+  if(!grepl("^v\\d+\\..+", version)){
     stop("Version must have at least one character after the dot (e.g. 'v1.0').")
   }
 }
@@ -46,7 +46,7 @@ validate_data_path <- function(path, argName = "path"){
   # path needs to be passed as a string
   checkmate::assert_string(path)
 
-  # the file exists, access = "r" ensures it’s readable
+  # the file exists, access = "r" ensures it is readable
   checkmate::assert_file_exists(path, access = "r", .var.name = argName)
 
   # must have the correct file extension: "rds" or "sav"
@@ -56,7 +56,7 @@ validate_data_path <- function(path, argName = "path"){
 }
 
 
-validate_new_data_name <- function(name) {
+validate_new_data_name <- function(name, .path = getwd()) {
 
   # type string, no NA, at least one character
   checkmate::assert_string(name, min.chars = 1)
@@ -64,6 +64,26 @@ validate_new_data_name <- function(name) {
   # only allow letters, digits or underscores
   if (!grepl("^[a-zA-Z0-9_]+$", name)) {
       stop("Name must only contain letters, digits, or underscores.")
+  }
+
+  # Check that the file doesn't already exist:
+  # Construct expected file paths
+  data_file      <- file.path(.path, "data", paste0(name, ".yaml"))
+  changelog_file <- file.path(.path, "changelogs", paste0(name, ".md"))
+  result_file    <- file.path(.path, "tests", paste0("result-", name, ".svg"))
+  test_file      <- file.path(.path, "tests", paste0("test-", name, ".R"))
+
+  # which of those already exist?
+  existing_files <- c(
+    if (file.exists(data_file))      {file.path("data", paste0(name, ".yaml"))},
+    if (file.exists(changelog_file)) {file.path("changelogs", paste0(name, ".md"))},
+    if (file.exists(result_file))    {file.path("tests", paste0("result-", name, ".svg"))},
+    if (file.exists(test_file))      {file.path("tests", paste0("test-", name, ".R"))}
+  )
+
+  # if any already exist, we cannot use the provided name
+  if (length(existing_files) > 0) {
+    stop("Cannot use name '", name, "'. The following file(s) already exist in ", .path, ": ", paste(existing_files, collapse = ", "), ".")
   }
 }
 
@@ -79,16 +99,14 @@ validate_depends <- function(path = getwd(), depends) {
   # check if the splitting worked properly
   if (length(depends_list) == 0 || any(depends_list == "")) {
     stop("depends string must contain valid dataset names separated by commas (e.g., 'dataset1, dataset2').")
-  } else { # if splitting worked, continue more checks
+  }
 
     # check existence of the individual files
-    for (dep in depends_list) {
-      yaml_file <- file.path(path, "data", paste0(dep, ".yaml"))
-      if (!file.exists(yaml_file)) {
-        stop(sprintf("Missing YAML file for dependency: '%s' (%s)", dep, yaml_file))
-      }
+  for (dep in depends_list) {
+    yaml_file <- file.path(path, "data", paste0(dep, ".yaml"))
+    if (!file.exists(yaml_file)) {
+      stop(sprintf("Missing YAML file for dependency: '%s' (%s)", dep, yaml_file))
     }
-
   }
 }
 

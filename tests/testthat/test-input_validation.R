@@ -180,3 +180,12 @@ test_that("validate_new_data_name() rejects empty string", {
   expect_error(validate_new_data_name(""), "must have at least 1 characters")
   expect_error(validate_new_data_name(" "), "only contain letters, digits, or underscores")
 })
+
+test_that("existing data name is rejected", {
+  file.create(file.path(data_dir, "existing.yaml"))
+  expect_error(validate_new_data_name("existing", .path = test_dir), "already exist.*existing.yaml")
+  file.create(file.path(changelog_dir, "existing.md"))
+  file.create(file.path(tests_dir, "result-existing.svg"))
+  file.create(file.path(tests_dir, "test-existing.R"))
+  expect_error(validate_new_data_name("existing", .path = test_dir), "already exist.*existing\\.yaml.*existing\\.md.*result-existing\\.svg.*test-existing\\.R")
+})
