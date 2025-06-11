@@ -26,20 +26,18 @@ validate_version <- function(version) {
   checkmate::assert_string(version)
 
   # starts with "v", then one or more digits, then a dot, then one or more digits
-  coll <- checkmate::makeAssertCollection() # for custom error messages
   if(!grepl("^v", version)){
-    coll$push("Version must start with a lowercase 'v' (e.g. 'v1.0').")
+    stop("Version must start with a lowercase 'v' (e.g. 'v1.0').")
   }
   else if(!grepl("^v\\d+", version)){
-    coll$push("Version must have one or more digits immediately after 'v' (e.g. 'v1.0').")
+    stop("Version must have one or more digits immediately after 'v' (e.g. 'v1.0').")
   }
   else if(!grepl("^v\\d+\\.", version)){
-    coll$push("Version must include a dot after the digits (e.g. 'v1.0').")
+    stop("Version must include a dot after the digits (e.g. 'v1.0').")
   }
-  else if(!grepl("^v\\d+\\.\\d+$", version)){
-    coll$push("Version must end with one or more digits after the dot (e.g. 'v1.0').")
+  else if(!grepl("^v\\d+\\..+", version)){
+    stop("Version must have at least one character after the dot (e.g. 'v1.0').")
   }
-  checkmate::reportAssertions(coll)
 }
 
 
@@ -58,17 +56,15 @@ validate_data_path <- function(path, argName = "path"){
 }
 
 
-validate_new_data_name <- function(name) { # 'validate_name' already exists in read_data_yaml.R
+validate_new_data_name <- function(name) {
 
   # type string, no NA, at least one character
   checkmate::assert_string(name, min.chars = 1)
 
   # only allow letters, digits or underscores
-  coll <- checkmate::makeAssertCollection()
   if (!grepl("^[a-zA-Z0-9_]+$", name)) {
-      coll$push("Name must only contain letters, digits, or underscores.")
+      stop("Name must only contain letters, digits, or underscores.")
   }
-  checkmate::reportAssertions(coll)
 }
 
 
@@ -81,22 +77,21 @@ validate_depends <- function(path = getwd(), depends) {
   depends_list <- strsplit(depends, split = ",\\s*")[[1]]
 
   # check if the splitting worked properly
-  coll <- checkmate::makeAssertCollection()
   if (length(depends_list) == 0 || any(depends_list == "")) {
-    coll$push("depends string must contain valid dataset names separated by commas (e.g., 'dataset1, dataset2').")
+    stop("depends string must contain valid dataset names separated by commas (e.g., 'dataset1, dataset2').")
   } else { # if splitting worked, continue more checks
 
     # check existence of the individual files
     for (dep in depends_list) {
       yaml_file <- file.path(path, "data", paste0(dep, ".yaml"))
       if (!file.exists(yaml_file)) {
-        coll$push(sprintf("Missing YAML file for dependency: '%s' (%s)", dep, yaml_file))
+        stop(sprintf("Missing YAML file for dependency: '%s' (%s)", dep, yaml_file))
       }
     }
 
   }
-  checkmate::reportAssertions(coll)
 }
+
 
 
 # TO DO

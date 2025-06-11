@@ -52,22 +52,22 @@ test_that("validate_directory_path() checks subdierectories", {
   # validation test should fail if one subdirectory is missing
 
   unlink(changelog_dir, recursive = TRUE)
-  expect_error(validate_directory_path(test_dir), "changelogs")
+  expect_error(validate_directory_path(test_dir), "missing.*changelogs")
   dir.create(changelog_dir)
 
   unlink(tests_dir, recursive = TRUE)
-  expect_error(validate_directory_path(test_dir), "tests")
+  expect_error(validate_directory_path(test_dir), "missing.*tests")
   dir.create(tests_dir)
 
   unlink(data_dir, recursive = TRUE)
-  expect_error(validate_directory_path(test_dir), "data")
+  expect_error(validate_directory_path(test_dir), "missing.*data")
   dir.create(data_dir)
 
   unlink(diff_dir, recursive = TRUE)
-  expect_error(validate_directory_path(test_dir), "diff")
+  expect_error(validate_directory_path(test_dir), "missing.*diff")
 
   unlink(changelog_dir, recursive = TRUE)
-  expect_error(validate_directory_path(test_dir), "changelogs, diff")
+  expect_error(validate_directory_path(test_dir), "missing.*changelogs, diff")
   dir.create(diff_dir)
   dir.create(changelog_dir)
 
@@ -86,6 +86,10 @@ test_that("validate_version() accepts correct version format", {
   expect_silent(validate_version("v123.456"))
   expect_silent(validate_version("v0.0"))
   expect_silent(validate_version("v001.099"))
+  expect_silent(validate_version("v1.alpha"))
+  expect_silent(validate_version("v1.beta1"))
+  expect_silent(validate_version("v1.0.2"))
+
 })
 
 test_that("validate_version() fails if input is not a string", {
@@ -108,15 +112,10 @@ test_that("validate_version() requires a dot after digits", {
   expect_error(validate_version("v1"), "dot after the digits")
 })
 
-test_that("validate_version() requires digits after the dot", {
-  expect_error(validate_version("v1."), "end with one or more digits after the dot")
-  expect_error(validate_version("v1.a"), "end with one or more digits after the dot")
+test_that("validate_version() requires something after the dot", {
+  expect_error(validate_version("v1."), "must have at least one character after the dot")
 })
 
-test_that("validate_version() rejects too complex versions", {
-  expect_error(validate_version("v1.0.2"), "end with one or more digits after the dot")
-  expect_error(validate_version("v1.0beta"), "end with one or more digits after the dot")
-})
 
 
 
