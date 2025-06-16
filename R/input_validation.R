@@ -56,37 +56,50 @@ validate_data_path <- function(path, argName = "path"){
 }
 
 
-validate_new_data_name <- function(name, .path = getwd()) {
+validate_data_name <- function(name, .path = getwd(), must_exist = FALSE) {
 
   # type string, no NA, at least one character
   checkmate::assert_string(name, min.chars = 1)
 
   # only allow letters, digits or underscores
   if (!grepl("^[a-zA-Z0-9_]+$", name)) {
-      stop("Name must only contain letters, digits, or underscores.")
+    stop("Name must only contain letters, digits, or underscores.")
   }
 
-  # Check that the file doesn't already exist:
   # Construct expected file paths
-  data_file      <- file.path(.path, "data", paste0(name, ".yaml"))
-  changelog_file <- file.path(.path, "changelogs", paste0(name, ".md"))
-  result_file    <- file.path(.path, "tests", paste0("result-", name, ".svg"))
-  test_file      <- file.path(.path, "tests", paste0("test-", name, ".R"))
-
-  # which of those already exist?
-  existing_files <- c(
-    if (file.exists(data_file))      {file.path("data", paste0(name, ".yaml"))},
-    if (file.exists(changelog_file)) {file.path("changelogs", paste0(name, ".md"))},
-    if (file.exists(result_file))    {file.path("tests", paste0("result-", name, ".svg"))},
-    if (file.exists(test_file))      {file.path("tests", paste0("test-", name, ".R"))}
+  expected_files <- stats::setNames(
+    c( # for file.exists()
+      file.path(.path, "data",        paste0(name, ".yaml")),
+      file.path(.path, "changelogs",  paste0(name, ".md")),
+      file.path(.path, "tests",       paste0("result-", name, ".svg")),
+      file.path(.path, "tests",       paste0("test-", name, ".R"))
+    ),
+    c( # for user friendly error message
+      file.path("data",        paste0(name, ".yaml")),
+      file.path("changelogs",  paste0(name, ".md")),
+      file.path("tests",       paste0("result-", name, ".svg")),
+      file.path("tests",       paste0("test-", name, ".R"))
+    )
   )
 
-  # if any already exist, we cannot use the provided name
-  if (length(existing_files) > 0) {
-    stop("Cannot use name '", name, "'. The following file(s) already exist in ", .path, ": ", paste(existing_files, collapse = ", "), ".")
+  file_status <- vapply(expected_files, file.exists, logical(1))
+
+  if (must_exist) {
+    # check existing data -> all files must exist
+    if (!all(file_status)) {
+      missing <- names(expected_files)[!file_status]
+      stop("Data name '", name, "' is incomplete. Missing file(s): ",
+           paste(missing, collapse = ", "), ".")
+    }
+  } else {
+    # new data -> all files must NOT exist
+    if (any(file_status)) {
+      existing <- names(expected_files)[file_status]
+      stop("Cannot use name '", name, "'. The following file(s) already exist: ",
+           paste(existing, collapse = ", "), ".")
+    }
   }
 }
-
 
 validate_depends <- function(path = getwd(), depends) {
 

@@ -27,7 +27,7 @@ add_data <- function(.path = getwd(), name, release_path, oldrel_path = NULL,
   validate_version(version)
   validate_data_path(release_path, "release_path")
   if(!is.null(oldrel_path)){validate_data_path(oldrel_path, "oldrel_path")}
-  validate_new_data_name(name)
+  validate_data_name(name)
   if(!is.null(depends)){validate_depends(.path, depends)}
 
   # file path
