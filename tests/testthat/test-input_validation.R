@@ -37,7 +37,6 @@ test_that("validate_directory_path() checks valid strings", {
   expect_error(validate_directory_path(c("./path1", "./path2")), "Must have length 1.")
 })
 
-
 test_that("validate_directory_path() fails for non-existing directories", {
   non_existent_path <- tempfile()
   expect_error(validate_directory_path(non_existent_path), "does not exist")
@@ -79,6 +78,7 @@ test_that("validate_directory_path() checks subdierectories", {
 })
 
 
+
 # validate_version -------------------------------------------------------------
 
 test_that("validate_version() accepts correct version format", {
@@ -118,7 +118,6 @@ test_that("validate_version() requires something after the dot", {
 
 
 
-
 # validate_data_path -----------------------------------------------------------
 
 test_that("validate_data_path() accepts valid data", {
@@ -152,40 +151,60 @@ test_that("validate_data_path() includes custom argName in error messages", {
 
 
 
-# validate_new_data_name -------------------------------------------------------
+# validate_data_name -------------------------------------------------------
 
-test_that("validate_new_data_name() accepts valid names", {
-  expect_silent(validate_new_data_name("dataset1"))
-  expect_silent(validate_new_data_name("Dataset_2025"))
-  expect_silent(validate_new_data_name("X123"))
-  expect_silent(validate_new_data_name("data_name"))
-  expect_silent(validate_new_data_name("Data_Name_1"))
+test_that("validate_data_name() accepts valid names", {
+  expect_silent(validate_data_name("dataset1"))
+  expect_silent(validate_data_name("Dataset_2025"))
+  expect_silent(validate_data_name("X123"))
+  expect_silent(validate_data_name("data_name"))
+  expect_silent(validate_data_name("Data_Name_1"))
 })
 
-test_that("validate_new_data_name() rejects invalid characters", {
-  expect_error(validate_new_data_name("data-name"), "only contain letters, digits, or underscores")
-  expect_error(validate_new_data_name("data.name"), "only contain letters, digits, or underscores")
-  expect_error(validate_new_data_name("data name"), "only contain letters, digits, or underscores")
-  expect_error(validate_new_data_name("name!"), "only contain letters, digits, or underscores")
-  expect_error(validate_new_data_name(" name"), "only contain letters, digits, or underscores")
+test_that("validate_data_name() rejects invalid characters", {
+  expect_error(validate_data_name("data-name"), "only contain letters, digits, or underscores")
+  expect_error(validate_data_name("data.name"), "only contain letters, digits, or underscores")
+  expect_error(validate_data_name("data name"), "only contain letters, digits, or underscores")
+  expect_error(validate_data_name("name!"), "only contain letters, digits, or underscores")
+  expect_error(validate_data_name(" name"), "only contain letters, digits, or underscores")
 })
 
-test_that("validate_new_data_name() rejects non-string input", {
-  expect_error(validate_new_data_name(123), "Must be of type 'string', not 'double'.")
-  expect_error(validate_new_data_name(TRUE), "Must be of type 'string', not 'logical'.")
-  expect_error(validate_new_data_name(NA), "May not be NA.")
+test_that("validate_data_name() rejects non-string input", {
+  expect_error(validate_data_name(123), "Must be of type 'string', not 'double'.")
+  expect_error(validate_data_name(TRUE), "Must be of type 'string', not 'logical'.")
+  expect_error(validate_data_name(NA), "May not be NA.")
 })
 
-test_that("validate_new_data_name() rejects empty string", {
-  expect_error(validate_new_data_name(""), "must have at least 1 characters")
-  expect_error(validate_new_data_name(" "), "only contain letters, digits, or underscores")
+test_that("validate_data_name() rejects empty string", {
+  expect_error(validate_data_name(""), "must have at least 1 characters")
+  expect_error(validate_data_name(" "), "only contain letters, digits, or underscores")
 })
 
-test_that("existing data name is rejected", {
+test_that("validate_data_name() rejects existing name", {
   file.create(file.path(data_dir, "existing.yaml"))
-  expect_error(validate_new_data_name("existing", .path = test_dir), "already exist.*existing.yaml")
+  expect_error(validate_data_name("existing", .path = test_dir), "already exist.*existing.yaml\\.")
   file.create(file.path(changelog_dir, "existing.md"))
   file.create(file.path(tests_dir, "result-existing.svg"))
   file.create(file.path(tests_dir, "test-existing.R"))
-  expect_error(validate_new_data_name("existing", .path = test_dir), "already exist.*existing\\.yaml.*existing\\.md.*result-existing\\.svg.*test-existing\\.R")
+  expect_error(validate_data_name("existing", .path = test_dir), "already exist.*existing\\.yaml.*existing\\.md.*result-existing\\.svg.*test-existing\\.R")
 })
+
+test_that("validate_data_name passes when must_exist = TRUE and all files exist", {
+  file.create(file.path(test_dir, "data", paste0("example", ".yaml")))
+  file.create(file.path(test_dir, "changelogs", paste0("example", ".md")))
+  file.create(file.path(test_dir, "tests", paste0("result-", "example", ".svg")))
+  file.create(file.path(test_dir, "tests", paste0("test-", "example", ".R")))
+  expect_silent(validate_data_name("example", .path = test_dir, must_exist = TRUE))
+})
+
+test_that("validate_data_name fails when must_exist = TRUE and some files are missing", {
+  expect_error(validate_data_name("example2", .path = test_dir, must_exist = TRUE), "incomplete.*data/example2\\.yaml.*changelogs/example2\\.md.*result-example2\\.svg.*test-example2\\.R")
+  file.create(file.path(test_dir, "changelogs", paste0("example2", ".md")))
+  file.create(file.path(test_dir, "tests", paste0("result-", "example2", ".svg")))
+  expect_error(validate_data_name("example2", .path = test_dir, must_exist = TRUE), "incomplete.*data/example2\\.yaml.*tests/test-example2\\.R.")
+})
+
+
+# validate_depends -------------------------------------------------------------
+
+
