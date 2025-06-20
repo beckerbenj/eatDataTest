@@ -114,12 +114,14 @@ validate_depends <- function(path = getwd(), depends) {
     stop("depends string must contain valid dataset names separated by commas (e.g., 'dataset1, dataset2').")
   }
 
-    # check existence of the individual files
-  for (dep in depends_list) {
-    yaml_file <- file.path(path, "data", paste0(dep, ".yaml"))
-    if (!file.exists(yaml_file)) {
-      stop(sprintf("Missing YAML file for dependency: '%s' (%s)", dep, yaml_file))
-    }
+  # check existence of the individual files
+  yaml_files <- file.path("data", paste0(depends_list, ".yaml"))
+  full_paths <- file.path(path, yaml_files)
+  exists <- file.exists(full_paths)
+
+  if (!all(exists)) {
+    missing <- yaml_files[!exists]
+    stop(sprintf("Missing YAML file(s) for dependency: %s", paste(missing, collapse = ", ")))
   }
 }
 
