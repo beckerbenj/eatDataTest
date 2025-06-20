@@ -182,29 +182,74 @@ test_that("validate_data_name() rejects empty string", {
 
 test_that("validate_data_name() rejects existing name", {
   file.create(file.path(data_dir, "existing.yaml"))
-  expect_error(validate_data_name("existing", .path = test_dir), "already exist.*existing.yaml\\.")
+  expect_error(validate_data_name("existing", path = test_dir), "already exist.*existing.yaml\\.")
   file.create(file.path(changelog_dir, "existing.md"))
   file.create(file.path(tests_dir, "result-existing.svg"))
   file.create(file.path(tests_dir, "test-existing.R"))
-  expect_error(validate_data_name("existing", .path = test_dir), "already exist.*existing\\.yaml.*existing\\.md.*result-existing\\.svg.*test-existing\\.R")
+  expect_error(validate_data_name("existing", path = test_dir), "already exist.*existing\\.yaml.*existing\\.md.*result-existing\\.svg.*test-existing\\.R")
 })
 
-test_that("validate_data_name passes when must_exist = TRUE and all files exist", {
+test_that("validate_data_name() passes when must_exist = TRUE and all files exist", {
   file.create(file.path(test_dir, "data", paste0("example", ".yaml")))
   file.create(file.path(test_dir, "changelogs", paste0("example", ".md")))
   file.create(file.path(test_dir, "tests", paste0("result-", "example", ".svg")))
   file.create(file.path(test_dir, "tests", paste0("test-", "example", ".R")))
-  expect_silent(validate_data_name("example", .path = test_dir, must_exist = TRUE))
+  expect_silent(validate_data_name("example", path = test_dir, must_exist = TRUE))
 })
 
-test_that("validate_data_name fails when must_exist = TRUE and some files are missing", {
-  expect_error(validate_data_name("example2", .path = test_dir, must_exist = TRUE), "incomplete.*data/example2\\.yaml.*changelogs/example2\\.md.*result-example2\\.svg.*test-example2\\.R")
+test_that("validate_data_name() fails when must_exist = TRUE and some files are missing", {
+  expect_error(validate_data_name("example2", path = test_dir, must_exist = TRUE), "incomplete.*data/example2\\.yaml.*changelogs/example2\\.md.*result-example2\\.svg.*test-example2\\.R")
   file.create(file.path(test_dir, "changelogs", paste0("example2", ".md")))
   file.create(file.path(test_dir, "tests", paste0("result-", "example2", ".svg")))
-  expect_error(validate_data_name("example2", .path = test_dir, must_exist = TRUE), "incomplete.*data/example2\\.yaml.*tests/test-example2\\.R.")
+  expect_error(validate_data_name("example2", path = test_dir, must_exist = TRUE), "incomplete.*data/example2\\.yaml.*tests/test-example2\\.R.")
 })
 
 
 # validate_depends -------------------------------------------------------------
+
+test_that("validate_depends() passes when all YAML files exist", {
+  expect_silent(validate_depends(path = "./helper_example_repo", depends = "helper_data1, helper_data2, helper_data3"))
+  expect_silent(validate_depends(path = "./helper_example_repo", depends = "helper_data1,helper_data2,helper_data3"))
+})
+
+test_that("validate_depends() accepts single file", {
+  expect_silent(validate_depends(path = "./helper_example_repo", depends = "helper_data1"))
+})
+
+test_that("validate_depends() throws error when one YAML file is missing", {
+  # only missing files
+  expect_error(validate_depends(path = "./helper_example_repo", depends = "non_existent_data"),
+               "Missing YAML.*data/non_existent_data\\.yaml")
+  # mix of missing and existing files
+  expect_error(validate_depends(path = "./helper_example_repo", depends = "helper_data1, non_existent_data, helper_data3"),
+               "Missing YAML.*data/non_existent_data\\.yaml")
+})
+
+test_that("validate_depends() throws error when multiple YAML files are missing", {
+  # only missing files
+  expect_error(validate_depends(path = "./helper_example_repo", depends = "non_existent_data1, non_existent_data2"),
+               "Missing YAML.*data/non_existent_data1\\.yaml.*data/non_existent_data2\\.yaml")
+  # mix of missing and existing files
+  expect_error(validate_depends(path = "./helper_example_repo", depends = "non_existent_data1, helper_data1, non_existent_data2"),
+               "Missing YAML.*data/non_existent_data1\\.yaml.*data/non_existent_data2\\.yaml")
+})
+
+
+test_that("validate_depends() throws error on empty string", {
+  expect_error(validate_depends(depends = ""), "depends string must contain valid dataset names")
+})
+
+test_that("validate_depends() rejects extra commas", {
+  expect_error(validate_depends(path = "./helper_example_repo", depends = "helper_data1,, helper_data2, helper_data3"), "depends string must contain valid dataset names")
+})
+
+test_that("validate_depends() rejects non-string input", {
+  expect_error(validate_depends(123), "Must be of type 'string', not 'double'.")
+  expect_error(validate_depends(TRUE), "Must be of type 'string', not 'logical'.")
+  expect_error(validate_depends(NA), "May not be NA.")
+})
+
+
+
 
 

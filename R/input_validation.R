@@ -56,7 +56,7 @@ validate_data_path <- function(path, argName = "path"){
 }
 
 
-validate_data_name <- function(name, .path = getwd(), must_exist = FALSE) {
+validate_data_name <- function(name, path = getwd(), must_exist = FALSE) {
 
   # type string, no NA, at least one character
   checkmate::assert_string(name, min.chars = 1)
@@ -69,10 +69,10 @@ validate_data_name <- function(name, .path = getwd(), must_exist = FALSE) {
   # Construct expected file paths
   expected_files <- stats::setNames(
     c( # for file.exists()
-      file.path(.path, "data",        paste0(name, ".yaml")),
-      file.path(.path, "changelogs",  paste0(name, ".md")),
-      file.path(.path, "tests",       paste0("result-", name, ".svg")),
-      file.path(.path, "tests",       paste0("test-", name, ".R"))
+      file.path(path, "data",        paste0(name, ".yaml")),
+      file.path(path, "changelogs",  paste0(name, ".md")),
+      file.path(path, "tests",       paste0("result-", name, ".svg")),
+      file.path(path, "tests",       paste0("test-", name, ".R"))
     ),
     c( # for user friendly error message
       file.path("data",        paste0(name, ".yaml")),
@@ -101,7 +101,7 @@ validate_data_name <- function(name, .path = getwd(), must_exist = FALSE) {
   }
 }
 
-validate_depends <- function(path = getwd(), depends) {
+validate_depends <- function(depends, path = getwd()) {
 
   # type string, no NA, at least one character
   checkmate::assertString(depends)
