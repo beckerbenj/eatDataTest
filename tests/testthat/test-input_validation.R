@@ -2,7 +2,8 @@
 # Setup for tests --------------------------------------------------------------
 
 # create temporary directory
-test_dir <- file.path(tempdir(), "test_repo")
+test_dir <- file.path(tempdir(), "test_repo_inputvalidation")
+if(dir.exists(test_dir)){unlink(test_dir, recursive = TRUE)}
 dir.create(test_dir)
 
 # create subdirectories
@@ -250,6 +251,8 @@ test_that("validate_depends() rejects non-string input", {
 })
 
 
+# Clean-up ---------------------------------------------------------------------
 
+unlink(test_dir, recursive = TRUE)
 
 
