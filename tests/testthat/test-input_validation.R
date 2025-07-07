@@ -19,8 +19,8 @@ dir.create(diff_dir)
 example_data_path <- "helper_example_repo/data_files/example_data"
 
 # save a random text file
-writeLines("This is not a data frame.", file.path(test_dir, "not_a_dataframe.txt"))
-example_text_file <- file.path(test_dir, "not_a_dataframe.txt")
+writeLines("This is not a data frame.", file.path(test_dir, "example_test_file.txt"))
+example_text_file <- file.path(test_dir, "example_test_file.txt")
 
 # a non existent file
 non_existent_file <- file.path(test_dir, "nonexistent_file.rds")
