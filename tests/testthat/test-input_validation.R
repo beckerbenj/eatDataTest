@@ -46,36 +46,48 @@ test_that("validate_directory_path() fails for non-existing directories", {
 
 test_that("validate_directory_path() checks subdierectories", {
 
+  # create new temporary directory to make this test self-contained
+  temp_test_dir <- file.path(tempdir(), "temp_test_repo_inputvalidation")
+  if(dir.exists(temp_test_dir)){unlink(temp_test_dir, recursive = TRUE)}
+  dir.create(temp_test_dir)
+
+  # create subdirectories
+  dir.create(file.path(temp_test_dir, "changelogs"))
+  dir.create(file.path(temp_test_dir, "tests"))
+  dir.create(file.path(temp_test_dir, "data"))
+  dir.create(file.path(temp_test_dir, "diff"))
+
   # validation test should pass because all directories exist
-  expect_silent(validate_directory_path(test_dir))
+  expect_silent(validate_directory_path(temp_test_dir))
 
   # validation test should fail if one subdirectory is missing
 
-  unlink(changelog_dir, recursive = TRUE)
-  expect_error(validate_directory_path(test_dir), "missing.*changelogs")
-  dir.create(changelog_dir)
+  unlink(file.path(temp_test_dir, "changelogs"), recursive = TRUE)
+  expect_error(validate_directory_path(temp_test_dir), "missing.*changelogs")
+  dir.create(file.path(temp_test_dir, "changelogs"))
 
-  unlink(tests_dir, recursive = TRUE)
-  expect_error(validate_directory_path(test_dir), "missing.*tests")
-  dir.create(tests_dir)
+  unlink(file.path(temp_test_dir, "tests"), recursive = TRUE)
+  expect_error(validate_directory_path(temp_test_dir), "missing.*tests")
+  dir.create(file.path(temp_test_dir, "tests"))
 
-  unlink(data_dir, recursive = TRUE)
-  expect_error(validate_directory_path(test_dir), "missing.*data")
-  dir.create(data_dir)
+  unlink(file.path(temp_test_dir, "data"), recursive = TRUE)
+  expect_error(validate_directory_path(temp_test_dir), "missing.*data")
+  dir.create(file.path(temp_test_dir, "data"))
 
-  unlink(diff_dir, recursive = TRUE)
-  expect_error(validate_directory_path(test_dir), "missing.*diff")
+  unlink(file.path(temp_test_dir, "diff"), recursive = TRUE)
+  expect_error(validate_directory_path(temp_test_dir), "missing.*diff")
 
-  unlink(changelog_dir, recursive = TRUE)
-  expect_error(validate_directory_path(test_dir), "missing.*changelogs, diff")
-  dir.create(diff_dir)
-  dir.create(changelog_dir)
+  unlink(file.path(temp_test_dir, "changelogs"), recursive = TRUE)
+  expect_error(validate_directory_path(temp_test_dir), "missing.*changelogs, diff")
+  dir.create(file.path(temp_test_dir, "diff"))
+  dir.create(file.path(temp_test_dir, "changelogs"))
 
   # test the behavior if the directory contains all required subdirectories plus others
-  extra_dir <- file.path(test_dir, "extra")
-  dir.create(extra_dir)
-  expect_silent(validate_directory_path(test_dir))
+  dir.create(file.path(temp_test_dir, "extra"))
+  expect_silent(validate_directory_path(file.path(temp_test_dir)))
 
+  #clean-up
+  unlink(temp_test_dir, recursive = TRUE)
 })
 
 
