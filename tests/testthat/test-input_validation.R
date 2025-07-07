@@ -189,19 +189,19 @@ test_that("validate_data_name() rejects existing name", {
   expect_error(validate_data_name("existing", path = test_dir), "already exist.*existing\\.yaml.*existing\\.md.*result-existing\\.svg.*test-existing\\.R")
 })
 
-test_that("validate_data_name() passes when must_exist = TRUE and all files exist", {
+test_that("validate_data_name() passes when existing = TRUE and all files exist", {
   file.create(file.path(test_dir, "data", paste0("example", ".yaml")))
   file.create(file.path(test_dir, "changelogs", paste0("example", ".md")))
   file.create(file.path(test_dir, "tests", paste0("result-", "example", ".svg")))
   file.create(file.path(test_dir, "tests", paste0("test-", "example", ".R")))
-  expect_silent(validate_data_name("example", path = test_dir, must_exist = TRUE))
+  expect_silent(validate_data_name("example", path = test_dir, existing = TRUE))
 })
 
-test_that("validate_data_name() fails when must_exist = TRUE and some files are missing", {
-  expect_error(validate_data_name("example2", path = test_dir, must_exist = TRUE), "incomplete.*data/example2\\.yaml.*changelogs/example2\\.md.*result-example2\\.svg.*test-example2\\.R")
+test_that("validate_data_name() fails when existing = TRUE and some files are missing", {
+  expect_error(validate_data_name("example2", path = test_dir, existing = TRUE), "incomplete.*data/example2\\.yaml.*changelogs/example2\\.md.*result-example2\\.svg.*test-example2\\.R")
   file.create(file.path(test_dir, "changelogs", paste0("example2", ".md")))
   file.create(file.path(test_dir, "tests", paste0("result-", "example2", ".svg")))
-  expect_error(validate_data_name("example2", path = test_dir, must_exist = TRUE), "incomplete.*data/example2\\.yaml.*tests/test-example2\\.R.")
+  expect_error(validate_data_name("example2", path = test_dir, existing = TRUE), "incomplete.*data/example2\\.yaml.*tests/test-example2\\.R.")
 })
 
 

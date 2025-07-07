@@ -56,7 +56,7 @@ validate_data_path <- function(path, argName = "path"){
 }
 
 
-validate_data_name <- function(name, path = getwd(), must_exist = FALSE) {
+validate_data_name <- function(name, path = getwd(), existing = FALSE) {
 
   # type string, no NA, at least one character
   checkmate::assert_string(name, min.chars = 1)
@@ -84,7 +84,7 @@ validate_data_name <- function(name, path = getwd(), must_exist = FALSE) {
 
   file_status <- vapply(expected_files, file.exists, logical(1))
 
-  if (must_exist) {
+  if (existing) {
     # check existing data -> all files must exist
     if (!all(file_status)) {
       missing <- names(expected_files)[!file_status]
