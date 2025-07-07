@@ -24,7 +24,7 @@ example_text_file <- file.path(test_dir, "example_test_file.txt")
 
 # a non existent file
 non_existent_file <- file.path(test_dir, "nonexistent_file.rds")
-if(!file.exists(non_existent_file)){unlink(non_existent_file, recursive = TRUE)}
+if(file.exists(non_existent_file)){unlink(non_existent_file, recursive = TRUE)}
 
 
 
