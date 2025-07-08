@@ -1,11 +1,11 @@
 Package: eatDataTest
 Title: educational assessment tools: Data Testing
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person("Benjamin", "Becker", , "b.becker@iqb.hu-berlin.de", role = c("aut", "cre"))
 Description: Provides a framework for unit testing and diff creation of data sets. 
 Depends: R (>= 4.4.0)
-Imports: eatGADS, yaml, writexl, eatFDZ, pkgload, clipr, cli, whisker, checkmate, stats
+Imports: eatGADS (>= 1.2.0), yaml, writexl, eatFDZ (>= 0.7.1), pkgload, clipr, cli, whisker
 URL: https://github.com/beckerbenj/eatDataTest,
     https://beckerbenj.github.io/eatDataTest/
 License: GPL (>= 2)

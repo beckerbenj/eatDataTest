@@ -36,6 +36,7 @@ Add the infrastructure for a new data set to the \code{eatDataTest} repository. 
 \item a markdown changelog (\code{.md} file)
 \item a test file (\code{.R} file in \code{tests})
 \item an initial test result icon (\code{.svg} file in \code{tests})
+\item an initial version badge (\code{.svg} file in \code{tests})
 \item a snippet which can be inserted into the \code{Readme.md}.
 }
 }

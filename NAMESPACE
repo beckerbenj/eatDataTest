@@ -2,8 +2,10 @@
 
 export(add_data)
 export(compare_meta_data_where_possible)
+export(create_data_diff)
 export(create_data_yaml)
 export(create_diff)
+export(create_meta_diff)
 export(get_depends)
 export(get_oldrel_path)
 export(get_release_path)

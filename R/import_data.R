@@ -28,13 +28,15 @@ import_data <- function(.path = getwd(), name, data_version = c("release", "oldr
 
   if(identical(file_extension, "sav")) {
     gads <- eatGADS::import_spss(file_path)
+    eatGADS:::check_GADSdat(gads)
   } else if(file_extension %in% c("RDS", "Rds", "rds")) {
     gads <- readRDS(file_path)
+    if(inherits(gads, "GADSdat")) {
+      eatGADS:::check_GADSdat(gads)
+    }
   } else {
     stop("Unsupported file extension: ", file_extension)
   }
-
-  eatGADS:::check_GADSdat(gads)
 
   gads
 }

@@ -4,7 +4,7 @@
 \alias{compare_meta_data_where_possible}
 \title{Compare meta data where possible.}
 \usage{
-compare_meta_data_where_possible(data1, data2, suffix = NULL, ID_var)
+compare_meta_data_where_possible(data1, data2, suffix = NULL)
 }
 \arguments{
 \item{data1}{First \code{GADSdat} object.}
@@ -12,8 +12,6 @@ compare_meta_data_where_possible(data1, data2, suffix = NULL, ID_var)
 \item{data2}{Second \code{GADSdat} object.}
 
 \item{suffix}{Suffix that should be removed from all}
-
-\item{ID_var}{Name of the id variable in both data sets (artifact of old function architecture).}
 }
 \value{
 Returns a named list via \code{eatFDZ::compare_data()}:

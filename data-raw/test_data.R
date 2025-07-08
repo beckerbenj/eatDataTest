@@ -17,3 +17,5 @@ saveRDS(sav_gads2, "tests/testthat/helper_example_repo/data_files/example_data2.
 
 save(sav_gads, file = "tests/testthat/helper_example_repo/data_files/example_data.RData")
 save(sav_gads2, file = "tests/testthat/helper_example_repo/data_files/example_data2.RData")
+
+saveRDS(mtcars, "tests/testthat/helper_example_repo/data_files/example_df.RDS")
