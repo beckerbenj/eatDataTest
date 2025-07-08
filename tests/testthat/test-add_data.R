@@ -1,16 +1,25 @@
 
+# Setup for tests --------------------------------------------------------------
 
+# create temporary directory
 test_dir <- file.path(tempdir(), "test_repo")
+if(dir.exists(test_dir)){unlink(test_dir, recursive = TRUE)}
 dir.create(test_dir)
 
+# create subdirectories
 changelog_dir <- file.path(test_dir, "changelogs")
 dir.create(changelog_dir)
-
 tests_dir <- file.path(test_dir, "tests")
 dir.create(tests_dir)
-
 data_dir <- file.path(test_dir, "data")
 dir.create(data_dir)
+diff_dir <- file.path(test_dir, "diff")
+dir.create(diff_dir)
+
+example_release_path <- test_path("helper_example_repo", "data_files", "example_data.sav")
+
+
+# Tests ------------------------------------------------------------------------
 
 test_that("write changelog md", {
   create_changelog(.path = test_dir, name = "data1")
@@ -44,9 +53,11 @@ test_that("create readme snippet", {
                "| data1              | v1.0    | ![s](tests/result-data1.svg) |")
 })
 
+
+
 if(clipr::clipr_available()) {
   test_that("full add data workflow", {
-    suppressMessages(out <- add_data(.path = test_dir, name = "data1", release_path = "C:/temp/data1.sav",
+    suppressMessages(out <- add_data(.path = test_dir, name = "data1", release_path = example_release_path,
                                      version = "v1.0"))
 
     expect_equal(out,
@@ -54,5 +65,7 @@ if(clipr::clipr_available()) {
   })
 }
 
-# delete temporary directory
+
+
+# delete temporary directory ---------------------------------------------------
 unlink(test_dir, recursive = TRUE)
