@@ -134,13 +134,20 @@ test_that("validate_version() requires something after the dot", {
 # validate_data_path -----------------------------------------------------------
 
 test_that("validate_data_path() accepts valid data", {
-  expect_silent(validate_data_path(test_path("helper_example_repo", "data_files", "example_data.rds")))
-  expect_silent(validate_data_path(test_path("helper_example_repo", "data_files", "example_data.sav")))
-  # should accept uppercase and mixed spelling as well:
-  expect_silent(validate_data_path(test_path("helper_example_repo", "data_files", "example_data.RDS")))
-  expect_silent(validate_data_path(test_path("helper_example_repo", "data_files", "example_data.rDs")))
-  expect_silent(validate_data_path(test_path("helper_example_repo", "data_files", "example_data.SAV")))
-  expect_silent(validate_data_path(test_path("helper_example_repo", "data_files", "example_data.sAv")))
+
+  tempfiles <- file.path(test_dir,
+                         c("example_data.rds",
+                           "example_data.sav", # should accept uppercase and mixed spelling as well:
+                           "example_data.RDS",
+                           "example_data.rDs",
+                           "example_data.SAV",
+                           "example_data.sAv"))
+
+  for (file in tempfiles){
+    file.create(file)
+    expect_silent(validate_data_path(file))
+    unlink(file)
+  }
 })
 
 test_that("validate_data_path() fails if path is not a string", {
