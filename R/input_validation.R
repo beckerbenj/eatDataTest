@@ -72,13 +72,15 @@ validate_data_name <- function(name, path = getwd(), existing = FALSE) {
       file.path(path, "data",        paste0(name, ".yaml")),
       file.path(path, "changelogs",  paste0(name, ".md")),
       file.path(path, "tests",       paste0("result-", name, ".svg")),
-      file.path(path, "tests",       paste0("test-", name, ".R"))
+      file.path(path, "tests",       paste0("test-", name, ".R")),
+      file.path(path, "tests",       paste0("version-", name, ".svg"))
     ),
     c( # for user friendly error message
       file.path("data",        paste0(name, ".yaml")),
       file.path("changelogs",  paste0(name, ".md")),
       file.path("tests",       paste0("result-", name, ".svg")),
-      file.path("tests",       paste0("test-", name, ".R"))
+      file.path("tests",       paste0("test-", name, ".R")),
+      file.path("tests",       paste0("version-", name, ".svg"))
     )
   )
 

@@ -198,8 +198,9 @@ test_that("validate_data_name() rejects existing name", {
   expect_error(validate_data_name("existing", path = test_dir), "already exist.*existing.yaml\\.")
   file.create(file.path(changelog_dir, "existing.md"))
   file.create(file.path(tests_dir, "result-existing.svg"))
+  file.create(file.path(tests_dir, "version-existing.svg"))
   file.create(file.path(tests_dir, "test-existing.R"))
-  expect_error(validate_data_name("existing", path = test_dir), "already exist.*existing\\.yaml.*existing\\.md.*result-existing\\.svg.*test-existing\\.R")
+  expect_error(validate_data_name("existing", path = test_dir), "already exist.*existing\\.yaml.*existing\\.md.*result-existing\\.svg.*test-existing\\.R.*version-existing\\.svg")
 })
 
 test_that("validate_data_name() passes when existing = TRUE and all files exist", {
@@ -207,6 +208,7 @@ test_that("validate_data_name() passes when existing = TRUE and all files exist"
   file.create(file.path(test_dir, "changelogs", paste0("example", ".md")))
   file.create(file.path(test_dir, "tests", paste0("result-", "example", ".svg")))
   file.create(file.path(test_dir, "tests", paste0("test-", "example", ".R")))
+  file.create(file.path(test_dir, "tests", paste0("version-", "example", ".svg")))
   expect_silent(validate_data_name("example", path = test_dir, existing = TRUE))
 })
 
@@ -214,7 +216,7 @@ test_that("validate_data_name() fails when existing = TRUE and some files are mi
   expect_error(validate_data_name("example2", path = test_dir, existing = TRUE), "incomplete.*data/example2\\.yaml.*changelogs/example2\\.md.*result-example2\\.svg.*test-example2\\.R")
   file.create(file.path(test_dir, "changelogs", paste0("example2", ".md")))
   file.create(file.path(test_dir, "tests", paste0("result-", "example2", ".svg")))
-  expect_error(validate_data_name("example2", path = test_dir, existing = TRUE), "incomplete.*data/example2\\.yaml.*tests/test-example2\\.R.")
+  expect_error(validate_data_name("example2", path = test_dir, existing = TRUE), "incomplete.*data/example2\\.yaml.*tests/test-example2\\.R..*version-example2\\.svg")
 })
 
 
