@@ -3,7 +3,7 @@
 ## Overview
 
 `eatDataTest` (educational assessment tools: Data Tests) is a framework
-for testing an comparing different data set versions.
+for testing and comparing different data set versions.
 
 ## Installation
 

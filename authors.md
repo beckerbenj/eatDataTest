@@ -4,6 +4,8 @@
 
 - **Benjamin Becker**. Author, maintainer.
 
+- **Alina Apel**. Contributor.
+
 ## Citation
 
 Source:
