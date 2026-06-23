@@ -1,8 +1,9 @@
 Package: eatDataTest
 Title: educational assessment tools: Data Testing
 Version: 0.1.0
-Authors@R: 
-    person("Benjamin", "Becker", , "b.becker@iqb.hu-berlin.de", role = c("aut", "cre"))
+Authors@R: c(
+    person("Benjamin", "Becker", , "b.becker@iqb.hu-berlin.de", role = c("aut", "cre")),
+    person("Alina", "Apel", role = c("ctb")))
 Description: Provides a framework for unit testing and diff creation of data sets. 
 Depends: R (>= 4.4.0)
 Imports: eatGADS (>= 1.2.0), yaml, writexl, eatFDZ (>= 0.7.1), pkgload, clipr, cli, whisker, checkmate, stats
